@@ -15,68 +15,71 @@
 <body>
 {% include 'trip_calculator/navigation.html' %}
 <main style="padding-top: 150px;">
-        <div class="container border border-dark-subtle rounded" style="background-color: rgb(200, 200, 200);">
-            <div class="row">
-                <div class="col-12">
-                    <div class="justify-content-center mt-3 mb-3">
-                        <p class="h2 text-center">Here you can add new trip</p>
-                    </div>
+    <div class="container border border-dark-subtle rounded" style="background-color: rgb(200, 200, 200);">
+        <div class="row">
+            <div class="col-12">
+                <div class="justify-content-center mt-3 mb-3">
+                    <p class="h2 text-center">Here you can add new trip</p>
                 </div>
             </div>
-            <div class="row justify-content-between">
-                <div class="container-fluid">
+        </div>
+        <div class="row justify-content-between">
+            <div class="container-fluid">
 
-                    <div class="row justify-content-start">
-                        <div class="col-4 ">
-                            <div class="container-fluid mb-3 border border-dark-subtle rounded">
+                <div class="row justify-content-start">
+                    <div class="col-4 ">
+                        <div class="container-fluid mb-3 border border-dark-subtle rounded">
 
-                                <div class="row mb-3 pt-3">
-                                    <div class="col-12 form-floating">
-                                        <input type="text" class="form-control" id="Trip_name">
-                                        <label for="Trip_name" style="margin-left: 5px; margin-top: -5px;">Trip
-                                            name</label>
-                                    </div>
+                            <div class="row mb-3 pt-3">
+                                <div class="col-12 form-floating">
+                                    <input type="text" class="form-control" id="Trip_name">
+                                    <label for="Trip_name" style="margin-left: 5px; margin-top: -5px;">Trip
+                                        name</label>
                                 </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-12 form-floating">
-                                        <input type="date" class="form-control" id="Trip_start_date">
-                                        <label for="Trip_start_date" style="margin-left: 5px; margin-top: -5px;">Trip
-                                            start date</label>
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-12 form-floating">
+                                    <input type="date" class="form-control" id="Trip_start_date">
+                                    <label for="Trip_start_date" style="margin-left: 5px; margin-top: -5px;">Trip
+                                        start date</label>
                                 </div>
+                            </div>
 
-                                <div class="row mb-3">
-                                    <div class="col-12 form-floating">
-                                        <input type="date" class="form-control" id="Trip_end_date">
-                                        <label for="Trip_end_date" style="margin-left: 5px; margin-top: -5px;">Trip end
-                                            date</label>
-                                    </div>
+                            <div class="row mb-3">
+                                <div class="col-12 form-floating">
+                                    <input type="date" class="form-control" id="Trip_end_date">
+                                    <label for="Trip_end_date" style="margin-left: 5px; margin-top: -5px;">Trip end
+                                        date</label>
                                 </div>
+                            </div>
 
-                                <div class="row pb-3">
-                                    <div class="col-12 form-floating">
+                            <div class="row pb-3">
+                                <div class="col-12 form-floating">
                                         <textarea class="form-control" id="Trip_description"
-                                            style="height: 100px"></textarea>
-                                        <label for="Trip_description" style="margin-left: 5px; margin-top: -5px;">Trip
-                                            description</label>
-                                    </div>
+                                                  style="height: 100px"></textarea>
+                                    <label for="Trip_description" style="margin-left: 5px; margin-top: -5px;">Trip
+                                        description</label>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
 
-                        <div class="col-8">
+                    <div class="col-8">
+                        <div class="row ps-2 pe-2">
                             <div class="container-fluid border border-dark-subtle rounded ">
-                                <div class="col-12 pt-3 pb-3">
-                                    <p class="h2 text-center">Add your frend !</p>
+                                <div class="col-12 pt-1 pb-2">
+                                    <p class="h4 text-left ps-1">Add your frend !</p>
                                 </div>
 
                                 <div class="row" id="checkboxGroup">
-                                    <div class="col-4 form-floating pb-3">
+                                    <div class="col-4 form-floating pb-1">
                                         <div class="checkbox-group">
                                             {% for person in person.frend_gr1 %}
-                                            <label><input type="checkbox" value="{{ person.name }} {{ person.lastname }}"> {{ person.name }} {{ person.lastname }}
+                                            <label><input type="checkbox"
+                                                          value="{{ person.name }} {{ person.lastname }}">
+                                                {{ person.name }} {{ person.lastname }}
                                             </label><br>
                                             {% endfor %}
                                         </div>
@@ -85,7 +88,9 @@
                                     <div class="col-4 form-floating pb-3">
                                         <div class="checkbox-group">
                                             {% for person in person.frend_gr2 %}
-                                            <label><input type="checkbox" value="{{ person.name }} {{ person.lastname }}"> {{ person.name }} {{ person.lastname }}
+                                            <label><input type="checkbox"
+                                                          value="{{ person.name }} {{ person.lastname }}">
+                                                {{ person.name }} {{ person.lastname }}
                                             </label><br>
                                             {% endfor %}
                                         </div>
@@ -96,7 +101,9 @@
                                     <div class="col-4 form-floating pb-3">
                                         <div class="checkbox-group">
                                             {% for person in person.frend_gr3 %}
-                                            <label><input type="checkbox" value="{{ person.name }} {{ person.lastname }}"> {{ person.name }} {{ person.lastname }}
+                                            <label><input type="checkbox"
+                                                          value="{{ person.name }} {{ person.lastname }}">
+                                                {{ person.name }} {{ person.lastname }}
                                             </label><br>
                                             {% endfor %}
 
@@ -106,19 +113,48 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row pt-2">
+                            <div class="container-fluid">
+                                <div class="col-12">
+                                    <button type="button" class="btn btn-success" data-bs-toggle="modal" id="create_trip_modal"
+                                            data-bs-target="#staticBackdrop">
+                                        Create
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 </body>
 {% include 'trip_calculator/footer.html' %}
 
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-</script>
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modal_summary_trip_create">
+      </div>
+        <div>{% csrf_token %}</div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="create_trip_submit">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+<script src="{% static 'trip_calculator/js/create_trip.js' %}"></script>
 
 </html>
