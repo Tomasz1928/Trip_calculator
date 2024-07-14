@@ -1,0 +1,32 @@
+.table-sm th,
+.table-sm td {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.container-main {
+background-color: rgba(224, 255, 255, 0.5);
+    margin-top: 20px;
+}
+.container-table {
+    margin-top: 20px;
+}
+
+.container-inputs {
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+}
+
+@media (max-width: 576px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .table-sm th,
+    .table-sm td {
+        padding: 0.4rem;
+        font-size: 0.8rem;
+    }
+
+}

@@ -28,5 +28,5 @@ def create_trip_view(request):
 
 
 def invite_friend_view(request):
-    menu = {"current_page": 'Invite new friend'}
+    menu = {"current_page": 'Invite friend'}
     return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
