@@ -1,40 +1,56 @@
-<nav style="background-color: rgb(200, 200, 200);">
-        <div class="container-fluid border">
-            <div class="row justify-content-between align-items-center">
+<nav style="background-color: rgba(224, 255, 255, 0.5);">
+    <div class="container-fluid border border-dark-subtle rounded border-2">
+        <div class="row justify-content-between align-items-center">
 
-                <div class="col-2">
-                    <div class="p-3">
-                        <p class="h4 text-left">{{ menu.current_trip_name}}</p>
-                    </div>
+            <div class="col-2">
+                <div class="p-3">
+                    <p class="h4 text-left">{{ menu.current_trip_name}}</p>
                 </div>
+            </div>
 
-                <div class="col-3 ">
-                    <div class="p-3">
-                        <p class="h4 text-center">{{ menu.current_page}}</p>
-                    </div>
+            <div class="col-3 ">
+                <div class="p-3">
+                    <p class="h4 text-center">{{ menu.current_page}}</p>
                 </div>
+            </div>
 
-                <div class="col-2 ">
-                    <div class="container">
-                        <div class="row justify-content-end">
-                            <div class="col-6 offset-6 col-sm-12">
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button"
+            <div class="col-2 ">
+                <div class="container">
+                    <div class="row justify-content-end">
+                        <div class="col-6 offset-6 col-sm-12">
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        Menu
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li><button class="dropdown-item" type="button">Create new trip</button></li>
-                                        {% if menu.any_trip %}
-                                        <li><button class="dropdown-item" type="button">Show trip details </button></li>
-                                        {% endif %}
-                                        <li><button class="dropdown-item" type="button">Log out</button></li>
-                                    </ul>
-                                </div>
+                                    Menu
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'create_trip_view' %}">
+                                            Create new trip
+                                        </a>
+                                    </li>
+
+                                     <li>
+                                        <a class="dropdown-item" href="{% url 'invite_friend_view' %}">
+                                            Invite friend
+                                        </a>
+                                    </li>
+                                    {% if menu.any_trip %}
+                                    <li>
+                                        <button class="dropdown-item" type="button">Show trip details</button>
+                                    </li>
+                                    {% endif %}
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'login_view' %}">
+                                            Log out
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
