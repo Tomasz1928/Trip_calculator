@@ -15,11 +15,9 @@ def login_page_view(request):
     return render(request, 'trip_calculator/login.html', {'login': login, 'background': background})
 
 
-
-def error_login_page_view(request):
-    login = {"error": True}
+def registration_view(request):
+    login = {"error": False}
     return render(request, 'trip_calculator/login.html', {'login': login, 'background': background})
-
 
 
 def create_trip_view(request):

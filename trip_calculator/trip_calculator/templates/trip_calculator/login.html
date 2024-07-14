@@ -32,7 +32,7 @@
     <div class="row central-container justify-content-center align-items-center">
 
         <div class="col-6 border border-dark-subtle rounded border-2"
-                style="background-color: rgba(224, 255, 255, 0.5)">
+             style="background-color: rgba(224, 255, 255, 0.5)">
 
             <form>
                 {% csrf_token %}
@@ -40,7 +40,7 @@
                 <div class="row justify-content-center mb-3">
                     <div class="col-12">
                         <div class="justify-content-center form-floating">
-                            <p class="h2 text-center">Hello, please log in to continue</p>
+                            <p class="h3 text-center fs-5 fs-md-4">Hello, please log in to continue</p>
                         </div>
                     </div>
 
@@ -59,26 +59,32 @@
                     </div>
 
                     {% if login.error %}
-                        <div class="col-12 mb-3">
-                            <div class="justify-content-center form-floating">
-                                <p class="h6 text-center" style="color: red;">Wrong username or password, please try
-                                    again.</p>
+                    <div class="col-12 mb-3">
+                        <div class="justify-content-center form-floating">
+                            <p class="h6 text-center" style="color: red;">Wrong username or password, please try
+                                again.</p>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success" id="login-button">Login</button>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                <div class="d-grid gap-2">
+                                    <a class="btn btn-primary" href="{% url 'registration_view' %}">Registration</a>
+                                </div>
                             </div>
                         </div>
-                        {% endif %}
-
-                    <div class="row justify-content-center">
-                        <div class="col-2">
-                            <div class="justify-content-center form-floating col-1 mb-2">
-                                <button type="submit" class="btn btn-success" id="login-button">Login</button>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </form>
         </div>
-
     </div>
 </div>
 
