@@ -5,7 +5,22 @@
     height: 100vh
 }
 
+.background-dropdown-color {
+    background-color: rgba(255, 255, 234, 1);
+}
+
+.transparent-label::after{
+    background-color: transparent !important;
+    border: none;
+}
+
 .container-main {
 background-color: rgba(224, 255, 255, 0.5);
     margin-top: 20px;
+}
+
+.container-inputs {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
 }
