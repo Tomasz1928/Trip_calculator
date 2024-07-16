@@ -24,3 +24,8 @@ background-color: rgba(224, 255, 255, 0.5);
     border: 1px solid #ccc;
     border-radius: 10px;
 }
+
+.table.table-light.table-sm.text-start.small th,
+.table.table-light.table-sm.text-start.small td {
+font-size: 0.65rem;
+        }
