@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("send-button");
     const inputs = document.querySelectorAll('#firstname-input, #lastname-input, #email-input');
     const tableBody = document.getElementById("table-body");
+    const formDiv = document.getElementById('form_content')
+    const crfsToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
 
     if (!tableBody) {
         console.error('Element with id "table-body" not found.');
@@ -23,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error('Element with id "table-body" not found.');
             return;
         }
-        // Sprawdź, czy tableBody ma dzieci (wiersze tabeli)
         const tableHasData = Array.from(tableBody.children).some(row => row.querySelectorAll('td').length > 0);
         sendButton.style.display = tableHasData ? "block" : "none";
         sendButton.disabled = !tableHasData;
@@ -75,13 +76,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const lastname = row.querySelector('[data-lastname]').textContent;
             const email = row.querySelector('[data-email]').textContent;
 
-            data.push({
-                firstname: firstname,
-                lastname: lastname,
-                email: email
-            });
+            data.push({ firstname: firstname, lastname: lastname, email: email })
         });
-        console.log(data)
+
+        const inputs = [
+            { name: 'friend', value: JSON.stringify(data) },
+            { name: 'csrfmiddlewaretoken', value: crfsToken }
+        ]
+
+        formDiv.innerHTML = ''
+        const form = document.createElement('form')
+        form.setAttribute("method", "post")
+
+        inputs.forEach(inputData => {
+            const input = document.createElement('input');
+            input.setAttribute("type", "hidden");
+            input.setAttribute("name", inputData.name);
+            input.setAttribute("value", inputData.value);
+            form.appendChild(input);
+        });
+        formDiv.append(form)
+        form.submit()
+
+
     });
 
     checkInputs();

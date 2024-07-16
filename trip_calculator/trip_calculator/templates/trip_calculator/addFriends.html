@@ -14,6 +14,10 @@
 
 <body class="background-img-style background-img-style" style="background-image: url('{{ background.img_url }}');">
     {% include 'trip_calculator/navigation.html' %}
+
+    {% csrf_token %}
+<div id="form_content">
+</div>
     <main>
 
         <div class="container container-main border border-dark-subtle rounded">
