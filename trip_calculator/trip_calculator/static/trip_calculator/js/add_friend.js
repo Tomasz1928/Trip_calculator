@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         formDiv.append(form)
         form.submit()
+        formDiv.innerHTML = ''
 
 
     });

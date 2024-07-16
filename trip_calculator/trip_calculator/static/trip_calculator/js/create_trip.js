@@ -22,6 +22,13 @@ document.addEventListener("DOMContentLoaded", () => {
         trip_squad: document.getElementById('trip-overall-squad')
     }
 
+    document.querySelectorAll('.dropdown-menu').forEach(function(dropdown) {
+      dropdown.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    });
+
+
     function collectData() {
         const squad = document.querySelectorAll('#trip-squad-checkbox input[type="checkbox"]:checked');
         selectedNames = []
@@ -82,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         formDiv.append(form)
         form.submit()
+        formDiv.innerHTML = ''
     })
 
 

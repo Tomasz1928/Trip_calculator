@@ -5,9 +5,9 @@ person = {"name": 'Tomasz'}
 trip = {"name": "Rumunia","all_person": [{'name':'Tomasz', 'lastname':'Leśniak'},{'name':'Robert', 'lastname':'Kromka'}, {'name':'ff', 'lastname':'tt'},] }
 background ={'img_url':'https://images.unsplash.com/photo-1500964757637-c85e8a162699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzIyMjJ8MHwxfHNlYXJjaHwxfHxyYW5kb20lMjBuYXR1cmFsJTIwdmlld3xlbnwwfHx8fDE3MjA3MjU1MDV8MA&ixlib=rb-4.0.3&q=80&w=1080' }
 
-person= {"frend_gr1":[{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"}],
-"frend_gr3":[{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"}]
-         }
+person= {"friend":[{"name":"Katarzyna", "lastname":"testNowakowska"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},
+{"name":"Katarzyna", "lastname":"testNowakowska"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"},{"name":"Test1", "lastname":"test2"}]}
+
 
 
 def login_page_view(request):
@@ -30,3 +30,8 @@ def create_trip_view(request):
 def invite_friend_view(request):
     menu = {"current_page": 'Invite friend'}
     return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
+
+
+def add_cost_view(request):
+    menu = {"current_page": 'Add trip cost'}
+    return render(request, 'trip_calculator/add_cost.html', {'menu': menu,'person': person, 'background': background})
