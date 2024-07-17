@@ -58,30 +58,30 @@
                                 <tbody class="table-group-divider">
                                 {% for trip in trip_list %}
                                 <tr>
-                                    <th scope="col">{{ trip.name }}</th>
-                                    <th scope="col">{{ trip.description }}</th>
-                                    <th scope="col">
+                                    <td scope="col">{{ trip.name }}</td>
+                                    <td scope="col">{{ trip.description }}</td>
+                                    <td scope="col">
                                         <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button"
+                                            <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
                                                     id="dropdownMenuButtonTrip"
                                                     data-bs-toggle="dropdown" aria-expanded="false">Expand
                                             </button>
-                                            <ul class="dropdown-menu background-dropdown-color"
+                                            <ul class="dropdown-menu background-dropdown-color dropdown-list"
                                                 aria-labelledby="dropdownMenuButtonTrip"
-                                                style="width: 250px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
+                                                style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
                                                 {% for person in trip.squad %}
                                                 <li class="ps-2 pe-2">{{ person.name }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
-                                    </th>
-                                    <th scope="col">{{ trip.cost }}</th>
+                                    </td>
+                                    <td scope="col">{{ trip.cost }}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
                                 <caption class="pt-2">
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-success bi">Create trip</a>
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi">Edit Trip</a>
+                                    <a href="{% url 'create_trip_view' %}" class="btn btn-success bi footer-tabel-button">Create trip</a>
+                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit Trip</a>
                                 </caption>
                             </table>
 
@@ -99,35 +99,35 @@
                                 <tbody class="table-group-divider">
                                 {% for friend in friends_list %}
                                 <tr>
-                                    <th scope="col">{{ friend.name }}</th>
-                                    <th scope="col">{{ friend.lastname }}</th>
+                                    <td scope="col">{{ friend.name }}</td>
+                                    <td scope="col">{{ friend.lastname }}</td>
                                     {% if friend.trips|length > 0 %}
-                                    <th scope="col">
+                                    <td scope="col">
                                         <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button"
+                                            <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
                                                     id="dropdownMenuButtonFriend"
                                                     data-bs-toggle="dropdown" aria-expanded="false">Expand
                                             </button>
-                                            <ul class="dropdown-menu background-dropdown-color"
+                                            <ul class="dropdown-menu background-dropdown-color dropdown-list"
                                                 aria-labelledby="dropdownMenuButtonFriend"
-                                                style="width: 250px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
+                                                style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
                                                 {% for trip in friend.trips %}
                                                 <li class="ps-2 pe-2">{{ trip.name }}</li>
                                                 {% endfor %}
                                             </ul>
                                         </div>
-                                    </th>
+                                    </td>
                                     {% else %}
-                                    <th scope="col">-</th>
+                                    <td scope="col">-</td>
                                     {% endif %}
-                                    <th scope="col">{{ friend.added }}</th>
+                                    <td scope="col">{{ friend.added }}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
                                 <caption class="pt-2">
-                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi">Invite
+                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi footer-tabel-button">Invite
                                         friend</a>
-                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-primary bi">Edit friend</a>
+                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-primary bi footer-tabel-button">Edit friend</a>
                                 </caption>
                             </table>
 
@@ -145,14 +145,14 @@
                                 <tbody class="table-group-divider">
 
                                 <tr>
-                                    <th scope="col">{{ user.name }}</th>
-                                    <th scope="col">{{ user.lastname }}</th>
-                                    <th scope="col">{{ user.email }}</th>
-                                    <th scope="col">{{ user.added }}</th>
+                                    <td scope="col">{{ user.name }}</td>
+                                    <td scope="col">{{ user.lastname }}</td>
+                                    <td scope="col">{{ user.email }}</td>
+                                    <td scope="col">{{ user.added }}</td>
                                 </tr>
                                 </tbody>
                                 <caption class="pt-2">
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi">Edit account</a>
+                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit account</a>
                                 </caption>
                             </table>
 

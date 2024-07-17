@@ -25,7 +25,40 @@ background-color: rgba(224, 255, 255, 0.5);
     border-radius: 10px;
 }
 
-.table.table-light.table-sm.text-start.small th,
-.table.table-light.table-sm.text-start.small td {
-font-size: 0.65rem;
-        }
+@media (max-width: 576px) {
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .table-sm th,
+    .table-sm td{
+        padding: 0.4rem;
+        font-size: 0.65rem;
+    }
+
+    .dropdown-list li{
+    padding: 0rem;
+    font-size: 0.65rem;
+    display: flex;
+    align-items: center;
+    }
+
+    .dropdown-list{
+    width: 150px
+    }
+
+    .table-button{
+    padding: 0.1rem 0.2rem;
+    font-size: 0.5rem;
+    line-height: 1;
+    }
+
+    .footer-tabel-button {
+
+    padding: 0.6rem 0.4rem;
+    font-size: 0.65rem;
+    line-height: 1;
+    margin-right: 8px
+
+    }
+}

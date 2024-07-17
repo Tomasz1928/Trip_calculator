@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dropdownDiv.className = 'dropdown';
 
         const button = document.createElement('button');
-        button.className = 'btn btn-primary dropdown-toggle';
+        button.className = 'btn btn-primary dropdown-toggle table-button';
         button.type = 'button';
         button.id = 'dropdownMenuButton';
         button.setAttribute('data-bs-toggle', 'dropdown');
@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
         button.textContent = 'Split';
 
         const ul = document.createElement('ul');
-        ul.className = 'dropdown-menu background-dropdown-color';
+        ul.className = 'dropdown-menu background-dropdown-color dropdown-list';
         ul.id = 'split-cost-checkbox';
         ul.setAttribute('aria-labelledby', 'dropdownMenuButton');
-        ul.style.width = '250px';
+        ul.style.maxWidth = '250px';
         ul.style.maxHeight = '250px';
         ul.style.whiteSpace = 'nowrap';
         ul.style.overflowY = 'auto';

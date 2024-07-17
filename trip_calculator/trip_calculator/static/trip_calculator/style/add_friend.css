@@ -9,16 +9,3 @@
 .container-table {
     margin-top: 20px;
 }
-
-
-@media (max-width: 576px) {
-    .table-responsive {
-        overflow-x: auto;
-    }
-    .table-sm th,
-    .table-sm td {
-        padding: 0.4rem;
-        font-size: 0.8rem;
-    }
-
-}
