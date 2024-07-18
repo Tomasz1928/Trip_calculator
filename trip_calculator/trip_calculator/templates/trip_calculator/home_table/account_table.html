@@ -1,0 +1,23 @@
+<div id="main-account-table" style="display: none">
+    <table class="table table-light table-sm text-start small">
+        <thead>
+        <tr>
+            <th scope="col">Firstname</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Email address</th>
+            <th scope="col">Created</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+        <tr>
+            <td scope="col">{{ user.name }}</td>
+            <td scope="col">{{ user.lastname }}</td>
+            <td scope="col">{{ user.email }}</td>
+            <td scope="col">{{ user.added }}</td>
+        </tr>
+        </tbody>
+        <caption class="pt-2">
+            <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit account</a>
+        </caption>
+    </table>
+</div>

@@ -1,0 +1,44 @@
+<div id="main-friend-table" style="display: none">
+    <table class="table table-light table-sm text-start small">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Lastname</th>
+            <th scope="col">Trips</th>
+            <th scope="col">Added</th>
+        </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+        {% for friend in friends_list %}
+        <tr>
+            <td scope="col">{{ friend.name }}</td>
+            <td scope="col">{{ friend.lastname }}</td>
+            {% if friend.trips|length > 0 %}
+            <td scope="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
+                            id="dropdownMenuButtonFriend"
+                            data-bs-toggle="dropdown" aria-expanded="false">Expand
+                    </button>
+                    <ul class="dropdown-menu background-dropdown-color dropdown-list"
+                        aria-labelledby="dropdownMenuButtonFriend"
+                        style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
+                        {% for trip in friend.trips %}
+                        <li class="ps-2 pe-2">{{ trip.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            {% else %}
+            <td scope="col">-</td>
+            {% endif %}
+            <td scope="col">{{ friend.added }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <caption class="pt-2">
+            <a href="{% url 'invite_friend_view' %}" class="btn btn-primary bi footer-tabel-button">Edit friend</a>
+        </caption>
+    </table>
+</div>

@@ -33,10 +33,21 @@
                         </button>
                         <button type="button" class="list-group-item list-group-item-action" id="main_friend">Friends
                         </button>
-                        <button type="button" class="list-group-item list-group-item-action" id="main_cost">Cost
+                        <button class="list-group-item list-group-item-action" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseWidthExample" aria-expanded="false"
+                                aria-controls="collapseWidthExample" id="main_cost" {% if cost.any %} {% else %}disabled{% endif %}>
+                            Cost
                         </button>
+                        {% if cost.any %}
+                        <div class="collapse" id="collapseWidthExample">
+                            {% for trip in cost.for_trip %}
+                            <button type="button" class="list-group-item list-group-item-action" id="main-cost-button-{{ trip.id }}" data-id="{{ trip.id }}">{{ trip.name }}</button>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
                         <button type="button" class="list-group-item list-group-item-action" id="main_account">Account
                         </button>
+
                     </div>
                 </div>
             </div>
@@ -45,117 +56,10 @@
                 <div class="container-table" style=" min-height: 250px;">
                     <div class="row justify-content-start">
                         <div id="context table">
-                            <table id="main-trip-table" class="table table-light table-sm text-start small">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Description</th>
-                                    <th scope="col">Squad</th>
-                                    <th scope="col">Cost</th>
-                                </tr>
-                                </thead>
-
-                                <tbody class="table-group-divider">
-                                {% for trip in trip_list %}
-                                <tr>
-                                    <td scope="col">{{ trip.name }}</td>
-                                    <td scope="col">{{ trip.description }}</td>
-                                    <td scope="col">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
-                                                    id="dropdownMenuButtonTrip"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">Expand
-                                            </button>
-                                            <ul class="dropdown-menu background-dropdown-color dropdown-list"
-                                                aria-labelledby="dropdownMenuButtonTrip"
-                                                style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
-                                                {% for person in trip.squad %}
-                                                <li class="ps-2 pe-2">{{ person.name }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td scope="col">{{ trip.cost }}</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                                <caption class="pt-2">
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-success bi footer-tabel-button">Create trip</a>
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit Trip</a>
-                                </caption>
-                            </table>
-
-
-                            <table id="main-friend-table" class="table table-light table-sm text-start small" >
-                                <thead>
-                                <tr>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Lastname</th>
-                                    <th scope="col">Trips</th>
-                                    <th scope="col">Added</th>
-                                </tr>
-                                </thead>
-
-                                <tbody class="table-group-divider">
-                                {% for friend in friends_list %}
-                                <tr>
-                                    <td scope="col">{{ friend.name }}</td>
-                                    <td scope="col">{{ friend.lastname }}</td>
-                                    {% if friend.trips|length > 0 %}
-                                    <td scope="col">
-                                        <div class="dropdown">
-                                            <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
-                                                    id="dropdownMenuButtonFriend"
-                                                    data-bs-toggle="dropdown" aria-expanded="false">Expand
-                                            </button>
-                                            <ul class="dropdown-menu background-dropdown-color dropdown-list"
-                                                aria-labelledby="dropdownMenuButtonFriend"
-                                                style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
-                                                {% for trip in friend.trips %}
-                                                <li class="ps-2 pe-2">{{ trip.name }}</li>
-                                                {% endfor %}
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    {% else %}
-                                    <td scope="col">-</td>
-                                    {% endif %}
-                                    <td scope="col">{{ friend.added }}</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                                <caption class="pt-2">
-                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi footer-tabel-button">Invite
-                                        friend</a>
-                                    <a href="{% url 'invite_friend_view' %}" class="btn btn-primary bi footer-tabel-button">Edit friend</a>
-                                </caption>
-                            </table>
-
-
-                            <table id="main-account-table" class="table table-light table-sm text-start small">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Firstname</th>
-                                    <th scope="col">Lastname</th>
-                                    <th scope="col">Email address</th>
-                                    <th scope="col">Created</th>
-                                </tr>
-                                </thead>
-
-                                <tbody class="table-group-divider">
-
-                                <tr>
-                                    <td scope="col">{{ user.name }}</td>
-                                    <td scope="col">{{ user.lastname }}</td>
-                                    <td scope="col">{{ user.email }}</td>
-                                    <td scope="col">{{ user.added }}</td>
-                                </tr>
-                                </tbody>
-                                <caption class="pt-2">
-                                    <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit account</a>
-                                </caption>
-                            </table>
-
+                            {% include 'trip_calculator/home_table/trip_table.html' %}
+                            {% include 'trip_calculator/home_table/friend_table.html' %}
+                            {% include 'trip_calculator/home_table/cost_table.html' %}
+                            {% include 'trip_calculator/home_table/account_table.html' %}
                         </div>
                     </div>
                 </div>
@@ -172,5 +76,5 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 
-<script src="{% static 'trip_calculator/js/add_cost.js' %}"></script>
+<script src="{% static 'trip_calculator/js/main.js' %}"></script>
 </html>

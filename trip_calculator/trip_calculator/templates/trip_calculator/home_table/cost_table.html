@@ -1,0 +1,48 @@
+{% for trip in cost.for_trip %}
+<div id="main-cost-tabel-{{ trip.id }}" style="display: none">
+    <table class="table table-light table-sm text-start small">
+        <thead>
+        <tr>
+            <th scope="col">Cost name</th>
+            <th scope="col">Payer</th>
+            <th scope="col">Split</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Unit cost</th>
+            <th scope="col">Return</th>
+        </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+        {% for cost in trip.costs %}
+        <tr>
+            <td scope="col">{{ cost.name }}</td>
+            <td scope="col">{{ cost.who_pay.name }}</td>
+            <td scope="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
+                            id="dropdownMenuButtonFriend"
+                            data-bs-toggle="dropdown" aria-expanded="false">Expand
+                    </button>
+                    <ul class="dropdown-menu background-dropdown-color dropdown-list"
+                        aria-labelledby="dropdownMenuButtonFriend"
+                        style="width: 100px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
+                        {% for name in cost.split_by %}
+                        <li class="ps-2 pe-2">{{ name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            <td scope="col">{{ cost.cost }}</td>
+            <td scope="col">{{ cost.unit_cost }}</td>
+            <td scope="col"> {% if cost.who_pay.was_you %}+ {% else %}- {% endif %} {{ cost.return }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+        <caption class="pt-2">
+           <p class="h6">Person sum: {{ trip.totalCost }}</p>
+            <p class="h6">Balance: {% if trip.balance.positive %}+ {% else %}- {% endif %}{{ trip.balance.amount }}</p>
+        </caption>
+    </table>
+</div>
+{% endfor %}

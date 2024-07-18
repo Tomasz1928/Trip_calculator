@@ -1,0 +1,40 @@
+<div id="main-trip-table" style="display: block">
+    <table class="table table-light table-sm text-start small">
+        <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Squad</th>
+            <th scope="col">Cost</th>
+        </tr>
+        </thead>
+
+        <tbody class="table-group-divider">
+        {% for trip in trip_list %}
+        <tr>
+            <td scope="col">{{ trip.name }}</td>
+            <td scope="col">{{ trip.description }}</td>
+            <td scope="col">
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
+                            id="dropdownMenuButtonTrip"
+                            data-bs-toggle="dropdown" aria-expanded="false">Expand
+                    </button>
+                    <ul class="dropdown-menu background-dropdown-color dropdown-list"
+                        aria-labelledby="dropdownMenuButtonTrip"
+                        style="width: 150px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
+                        {% for person in trip.squad %}
+                        <li class="ps-2 pe-2">{{ person.name }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </td>
+            <td scope="col">{{ trip.cost }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <caption class="pt-2">
+            <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit Trip</a>
+        </caption>
+    </table>
+</div>
