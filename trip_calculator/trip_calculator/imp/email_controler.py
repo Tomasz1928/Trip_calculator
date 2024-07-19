@@ -1,0 +1,40 @@
+from typing import List, Optional
+from django.core.mail import send_mail
+from django.conf import settings
+from django.urls import reverse
+
+
+class InvitationEmailSender:
+    def __init__(self) -> None:
+        self.subject = ''
+        self.message = ''
+        self.email = ''
+        self.password = ''
+
+    def set_email(self, email: str) -> None:
+        self.email = email
+
+    def set_password(self, password: str) -> None:
+        self.password = password
+
+    def generate_invitation_message(self) -> None:
+        self.subject = 'No Reply. Invitation to Trip Calculator System'
+        login_url = reverse('login_view')
+        full_login_url = f'{settings.SITE_URL}{login_url}'
+        self.message = (
+            f'You have been invited to the Trip Calculator system by your friend.\n\n'
+            f'Here is your password: {self.password}\n'
+            f'Here is your login: {self.email}\n'
+            f'Please use this credential to log in here: {full_login_url}\n\n'
+            f'After Login please update your First name and Last name.\n\n'
+            f'Best regards,\n'
+            f'Team Trip Cost Calculator'
+        )
+
+    def send_email(self) -> None:
+        from_email = settings.DEFAULT_FROM_EMAIL
+        recipient_list = [self.email]
+        try:
+            send_mail(self.subject, self.message, from_email, recipient_list)
+        except Exception as e:
+            print(e)
