@@ -4,7 +4,7 @@ from django.conf import settings
 from django.urls import reverse
 
 
-class InvitationEmailSender:
+class EmailSender:
     def __init__(self) -> None:
         self.subject = ''
         self.message = ''
@@ -27,6 +27,15 @@ class InvitationEmailSender:
             f'Here is your login: {self.email}\n'
             f'Please use this credential to log in here: {full_login_url}\n\n'
             f'After Login please update your First name and Last name.\n\n'
+            f'Best regards,\n'
+            f'Team Trip Cost Calculator'
+        )
+
+    def generate_recovery_message(self) -> None:
+        self.subject = 'No Reply. Your new password for Trip Calculator System'
+        self.message = (
+            f'Recovery process finished successfully, below You will found a new generated password.\n\n'
+            f'Here is your password: {self.password}\n'
             f'Best regards,\n'
             f'Team Trip Cost Calculator'
         )
