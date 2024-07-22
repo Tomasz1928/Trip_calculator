@@ -18,15 +18,31 @@ class EmailSender:
         self.password = password
 
     def generate_invitation_message(self) -> None:
-        self.subject = 'No Reply. Invitation to Trip Calculator System'
         login_url = reverse('login_view')
         full_login_url = f'{settings.SITE_URL}{login_url}'
+
+        self.subject = 'No Reply. Invitation to Trip Calculator System'
         self.message = (
             f'You have been invited to the Trip Calculator system by your friend.\n\n'
-            f'Here is your password: {self.password}\n'
             f'Here is your login: {self.email}\n'
+            f'Here is your password: {self.password}\n'
             f'Please use this credential to log in here: {full_login_url}\n\n'
             f'After Login please update your First name and Last name.\n\n'
+            f'Best regards,\n'
+            f'Team Trip Cost Calculator'
+        )
+
+    def generate_registration_message(self) -> None:
+        login_url = reverse('login_view')
+        full_login_url = f'{settings.SITE_URL}{login_url}'
+
+        self.subject = 'No Reply. Welcome to Trip Calculator System'
+        self.message = (
+            f'Thank you very much for registering in our system.\n\n'
+            f'below you will find your login details.\n'
+            f'Here is your login: {self.email}\n'
+            f'Here is your password: {self.password}\n'
+            f'Please use this credential to log in here: {full_login_url}\n\n'
             f'Best regards,\n'
             f'Team Trip Cost Calculator'
         )

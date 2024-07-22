@@ -1,79 +1,85 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
+from trip_calculator.imp.email_controler import EmailSender
 from trip_calculator import models
+import json
+import secrets
+import string
 
-from trip_calculator.imp import email_controler
 
-
-class UserDetails:
-    def __init__(self, email):
-        self.email_address = email
-        self.firstname = '-'
-        self.lastname = '-'
-        self.password = User.objects.make_random_password()
-        self.password_hashed = make_password(self.password)
-
-    def _create_user_in_DB_(self):
-        create_user = models.User(
-            password=self.password_hashed,
-            firstname=self.firstname,
-            lastname=self.lastname,
-            email=self.email_address)
-        create_user.save()
+class CustomUserManager(BaseUserManager):
+    def _create_user_in_DB_(self, email_address, firstname, lastname, password_hashed):
+        if self.model is None:
+            raise ValueError("Model has not been correctly set.")
+        user = self.model(
+            email=email_address,
+            firstname=firstname,
+            lastname=lastname,
+            password=password_hashed
+        )
+        user.save(using=self._db)
+        return user
 
     def _update_user_(self, user_id, **kwargs):
-        update_user = models.User.objects.get(id=user_id)
+        update_user = self.get_queryset().get(user_id=user_id)
 
-        if 'firstname' in kwargs != '':
+        if 'firstname' in kwargs and kwargs['firstname']:
             update_user.firstname = kwargs['firstname']
 
-        if 'lastname' in kwargs != '':
+        if 'lastname' in kwargs and kwargs['lastname']:
             update_user.lastname = kwargs['lastname']
 
-        if 'email' in kwargs != '':
+        if 'email' in kwargs and kwargs['email']:
             update_user.email = kwargs['email']
 
-        if 'password' in kwargs != '':
+        if 'password' in kwargs and kwargs['password']:
             update_user.password = make_password(kwargs['password'])
 
-        update_user.save()
+        update_user.save(using=self._db)
 
-    def _check_if_emailExist_(self):
-        return models.User.objects.filter(email=self.email_address).exists()
+    def get_by_natural_key(self, email):
+        return self.get_queryset().get(email=email)
 
-    def get_user_id(self):
-        user = models.User.objects.get(email=self.email_address)
-        return user.user_id
+    def get_by_user_id(self, email):
+        return self.get_queryset().get(email=email).user_id
 
-    def set_user_details(self, firstname, lastname):
-        self.firstname = firstname
-        self.lastname = lastname
+    def check_if_email_exists(self, email):
+        return self.filter(email=email).exists()
 
-    def set_password(self, password):
-        self.password = password
-        self.password_hashed = make_password(password)
-
-    def set_email(self, email):
-        self.email_address = email
-
-    def register_user(self):
-        if self._check_if_emailExist_():
+    def register_user(self, email_address, firstname, lastname):
+        if self.check_if_email_exists(email_address):
             return {"registration_pass": False}
         else:
-            self._create_user_in_DB_()
-            invitation_message = email_controler.EmailSender()
-            invitation_message.set_email(self.email_address)
-            invitation_message.set_password(self.password)
-            invitation_message.send_email()
+            password = generate_random_password()
+            password_hashed = make_password(password)
+            self._create_user_in_DB_(email_address, firstname, lastname, password_hashed)
+            send = EmailSender()
+            send.set_email(email_address)
+            send.set_password(password)
+            send.generate_registration_message()
+            send.send_email()
+            return {"registration_pass": True}
+
+    def invite_user(self, email_address):
+        if self.check_if_email_exists(email_address):
+            return {"registration_pass": False}
+        else:
+            password = generate_random_password()
+            password_hashed = make_password(password)
+            self._create_user_in_DB_(email_address, '-', '-', password_hashed)
+            send = EmailSender()
+            send.set_email(email_address)
+            send.set_password(password)
+            send.generate_invitation_message()
+            send.send_email()
             return {"registration_pass": True}
 
     def recovery(self, email):
-        self.set_email(email)
-        if self._check_if_emailExist_():
-            new_password = User.objects.make_random_password()
-            self._update_user_(self.get_user_id(),  password=new_password)
-            recovery_message = email_controler.EmailSender()
-            recovery_message.set_email(self.email_address)
+        if self.check_if_email_exists(email):
+            new_password = generate_random_password()
+            self._update_user_(self.get_by_user_id(email), password=new_password)
+            recovery_message = EmailSender()
+            recovery_message.set_email(email)
             recovery_message.generate_recovery_message()
             recovery_message.send_email()
             return {"recovery_pass": True}
@@ -81,3 +87,17 @@ class UserDetails:
             return {"recovery_pass": False}
 
 
+def registration(data):
+    return models.User.objects.register_user(data['email'], data['firstname'], data['lastname'])
+
+
+def invite_user(data):
+    data = json.loads(data['friend'])
+    for user in data:
+        models.User.objects.invite_user(user['email'])
+
+
+def generate_random_password(length=12):
+    characters = string.ascii_letters + string.digits
+    password = ''.join(secrets.choice(characters) for i in range(length))
+    return password

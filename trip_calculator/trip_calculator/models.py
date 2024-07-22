@@ -1,4 +1,26 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from trip_calculator.imp.user_registration import CustomUserManager
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    user_id = models.AutoField(primary_key=True)
+    email = models.EmailField(unique=True)
+    password = models.CharField(max_length=255)
+    firstname = models.CharField(max_length=255, blank=True, null=True)
+    lastname = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_login = models.DateTimeField(null=True, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    def __str__(self):
+        return self.email
 
 
 class Trip(models.Model):
@@ -7,15 +29,6 @@ class Trip(models.Model):
     start = models.CharField(max_length=255)
     end = models.CharField(max_length=255)
     description = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-
-class User(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    password = models.CharField(max_length=255)
-    firstname = models.CharField(max_length=255, blank=True, null=True)
-    lastname = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
 
