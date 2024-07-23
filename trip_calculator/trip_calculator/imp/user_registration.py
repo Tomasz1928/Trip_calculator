@@ -40,8 +40,11 @@ class CustomUserManager(BaseUserManager):
     def get_by_natural_key(self, email):
         return self.get_queryset().get(email=email)
 
-    def get_by_user_id(self, email):
+    def get_user_id_by_email(self, email):
         return self.get_queryset().get(email=email).user_id
+
+    def get_user_by_ID(self, user_id):
+        return self.get_queryset().get(user_id=user_id)
 
     def check_if_email_exists(self, email):
         return self.filter(email=email).exists()
@@ -60,13 +63,22 @@ class CustomUserManager(BaseUserManager):
             send.send_email()
             return {"registration_pass": True}
 
-    def invite_user(self, email_address):
+    def invite_user(self, user_id, email_address):
+        from trip_calculator.imp.invite_friend import AddFriend
         if self.check_if_email_exists(email_address):
+            friend_id = self.get_user_id_by_email(email_address)
+            print(friend_id)
+            new_friend = AddFriend(user_id)
+            new_friend.add_friend(self.get_user_id_by_email(email_address))
             return {"registration_pass": False}
         else:
             password = generate_random_password()
             password_hashed = make_password(password)
             self._create_user_in_DB_(email_address, '-', '-', password_hashed)
+
+            new_friend = AddFriend(user_id)
+            new_friend.add_friend(int(self.get_user_id_by_email(email_address)))
+
             send = EmailSender()
             send.set_email(email_address)
             send.set_password(password)
@@ -91,10 +103,10 @@ def registration(data):
     return models.User.objects.register_user(data['email'], data['firstname'], data['lastname'])
 
 
-def invite_user(data):
+def invite_user(user_id, data):
     data = json.loads(data['friend'])
     for user in data:
-        models.User.objects.invite_user(user['email'])
+        models.User.objects.invite_user(user_id, user['email'])
 
 
 def generate_random_password(length=12):

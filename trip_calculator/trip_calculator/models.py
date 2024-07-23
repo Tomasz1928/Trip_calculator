@@ -54,3 +54,9 @@ class Cost(models.Model):
 class Splited(models.Model):
     cost_id = models.ForeignKey(Cost, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Friend(models.Model):
+    user_id = models.IntegerField()
+    friend_id = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
