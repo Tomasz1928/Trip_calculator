@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from trip_calculator.imp.user_registration import CustomUserManager
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from trip_calculator.imp.registration_controller import CustomUserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -24,7 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Trip(models.Model):
-    tabel_id = models.AutoField(primary_key=True)
+    trip_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     start = models.CharField(max_length=255)
     end = models.CharField(max_length=255)
@@ -33,8 +33,8 @@ class Trip(models.Model):
 
 
 class UserTrip(models.Model):
-    trip_id = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    trip_id = models.IntegerField()
+    user_id = models.IntegerField()
 
 
 class Invitation(models.Model):

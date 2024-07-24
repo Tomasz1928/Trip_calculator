@@ -1,5 +1,8 @@
-from trip_calculator.models import Friend, User
-class AddFriend:
+from trip_calculator.models import Friend, User, UserTrip, Trip
+from datetime import datetime, timezone
+
+
+class FriendController:
     def __init__(self, user_id):
         self.user_id = user_id
         self.friend_id = ''
@@ -26,10 +29,25 @@ class AddFriend:
         delete_friend_for_friend.delete()
 
     def get_Friend_list(self):
-
-        friend_list = Friend.objects.filter(user_id=self.user_id)
+        sql_query = Friend.objects.filter(user_id=self.user_id)
         friend_detail_list = []
-        for friend in friend_list:
-            friend_detail = User.objects.get_user_by_ID(friend.friend_id)
-            friend_detail_list.append({'name': friend_detail.firstname, 'lastname': friend_detail.lastname, 'added': friend.created_at})
+
+        for obj in sql_query:
+            friend_add_date = obj.created_at
+            sql_query2 = UserTrip.objects.filter(user_id=obj.user_id)
+            common_trip_name_list = []
+
+            for obj2 in sql_query2:
+                common_trip_id = UserTrip.objects.get(user_id=self.user_id, trip_id = obj2.trip_id)
+                comon_trip_name = Trip.objects.get(trip_id= common_trip_id.trip_id)
+                common_trip_name_list.append({'name': comon_trip_name.name})
+
+            friend_detail = User.objects.get_user_by_ID(obj.friend_id)
+            data = {'name': friend_detail.firstname,
+                    'lastname': friend_detail.lastname,
+                    'added': friend_add_date.strftime("%d.%m.%Y"),
+                    'user_id': friend_detail.user_id,
+                    'trips': common_trip_name_list
+                    }
+            friend_detail_list.append(data)
         return friend_detail_list

@@ -69,13 +69,13 @@
                                         <ul class="dropdown-menu background-dropdown-color" id="trip-squad-checkbox"
                                             aria-labelledby="dropdownMenuButton" style="maxWidth: 250px; white-space: nowrap; maxHeight: 400px; overflow-y: auto; ">
 
-                                            {% for person in person.friend %}
+                                            {% for person in person %}
                                             <li class="ps-2 pe-2">
                                                 <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="{{ person.name }} {{ person.lastname }}"
+                                                    <input class="form-check-input" type="checkbox" value="{{ person.user_id }}"
                                                            id="friend-checkbox-{{ forloop.counter }}">
                                                     <label class="form-check-label"
-                                                           for="friend-checkbox-{{ forloop.counter }}">
+                                                           for="friend-checkbox-{{ forloop.counter }}" data-value ="{{ person.name }} {{ person.lastname }}" >
                                                         {{ person.name }} {{ person.lastname }}
                                                     </label>
                                                 </div>

@@ -22,18 +22,22 @@ document.addEventListener("DOMContentLoaded", () => {
         trip_squad: document.getElementById('trip-overall-squad')
     }
 
-    document.querySelectorAll('.dropdown-menu').forEach(function(dropdown) {
-      dropdown.addEventListener('click', function(e) {
-        e.stopPropagation();
-      });
+    document.querySelectorAll('.dropdown-menu').forEach(function (dropdown) {
+        dropdown.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
     });
 
 
     function collectData() {
         const squad = document.querySelectorAll('#trip-squad-checkbox input[type="checkbox"]:checked');
         selectedNames = []
+        selectedUserId = []
         squad.forEach(checkbox => {
-            selectedNames.push(checkbox.value.trim());
+            selectedUserId.push(parseInt(checkbox.value.trim()));
+            const label = document.querySelector(`label[for="${checkbox.id}"]`)
+            if (label) { selectedNames.push(label.getAttribute('data-value')) }
+
         });
 
         data = {
@@ -41,7 +45,8 @@ document.addEventListener("DOMContentLoaded", () => {
             tripStart: tripStart.value,
             tripEnd: tripEnd.value,
             tripDescription: tripDescription.value,
-            tripSquad: selectedNames
+            tripSquad: selectedNames,
+            tripSquadIds: selectedUserId
         }
 
         Overview(data)
@@ -75,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
             { name: 'start', value: data.tripStart },
             { name: 'end', value: data.tripEnd },
             { name: 'description', value: data.tripDescription },
-            { name: 'squad', value: data.tripSquad },
+            { name: 'squad', value: JSON.stringify(data.tripSquadIds) },
             { name: 'csrfmiddlewaretoken', value: crfsToken }
         ];
 
