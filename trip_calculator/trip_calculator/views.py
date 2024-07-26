@@ -19,7 +19,7 @@ person = {"friend": [{"name": "Katarzyna", "lastname": "testNowakowska", 'user_i
 cost = {
     "any": True,
     "for_trip": [{
-        "id": '123',
+        "id": '36',
         "name": 'Rumunia',
         "totalCost": 123123,
         "balance": {"amount": 123, "positive": True},
@@ -43,7 +43,7 @@ cost = {
         ]
     },
         {
-            "id": '1233',
+            "id": '37',
             "name": 'Polska',
             "totalCost": 1223,
             "balance": {"amount": 13, "positive": False},
@@ -121,22 +121,26 @@ def invite_friend_view(request):
 
     return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
 
+
 @login_required
-def add_cost_view(request):
+def add_cost_view(request, trip_id):
     menu = {"current_page": 'Add trip cost'}
-    return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': person, 'background': background})
+    user_id = request.session.get('user_id')
+    if request.method == 'POST':
+        trip_controller.add_cost(user_id, trip_id, request.POST)
+        return redirect("home_view")
+    trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
+    trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_squad))
+    return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': trip_squad, 'background': background})
+
 
 @login_required
 def home_view(request):
     menu = {"current_page": 'home view'}
-
-    trip = [{'name': 'Rumunia', 'description': 'Jedziemy do Rumuni pozwiedzać zamek drakuli', 'cost': '1561 zł',
-             'squad': [{'name': 'Tomasz'}, {'name': 'Adam'}, {'name': 'Emi'}]},
-            {'name': 'Bługaria', 'description': 'Jedziemy do Bługari nad morze', 'cost': '12561 zł',
-             'squad': [{'name': 'Adam'}, {'name': 'Adam'}, {'name': 'Łukasz'}]}]
-
+    user_id = request.session.get('user_id')
+    trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(request.session.get('user_id')).get_Friend_list()
-    print(friend)
+
 
     user = {'name': 'Tomasz', 'lastname': 'Leśniak', 'email': 'tomasz1lesniak@gmail.com', 'added': '12-12-2023'}
 

@@ -40,7 +40,8 @@
 
         </tbody>
         <caption class="pt-2">
-           <p class="h6">Person sum: {{ trip.totalCost }}</p>
+            <a href="{% url 'add_cost_view' trip_id=trip.id %}" class="btn btn-success bi footer-tabel-button"> Add Cost</a>
+            <p class="h6">Person sum: {{ trip.totalCost }}</p>
             <p class="h6">Balance: {% if trip.balance.positive %}+ {% else %}- {% endif %}{{ trip.balance.amount }}</p>
         </caption>
     </table>
