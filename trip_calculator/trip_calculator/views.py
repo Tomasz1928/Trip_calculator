@@ -4,71 +4,8 @@ from trip_calculator.imp import registration_controller, trip_controller
 from django.contrib.auth import authenticate, login
 from trip_calculator.imp.friend_controller import FriendController
 
-
-# Create your views here.
-person = {"name": 'Tomasz'}
-trip = {"name": "Rumunia",
-        "all_person": [{'name': 'Tomasz', 'lastname': 'Leśniak'}, {'name': 'Robert', 'lastname': 'Kromka'},
-                       {'name': 'ff', 'lastname': 'tt'}, ]}
 background = {
     'img_url': 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzIyMjJ8MHwxfHNlYXJjaHwxfHxyYW5kb20lMjBuYXR1cmFsJTIwdmlld3xlbnwwfHx8fDE3MjA3MjU1MDV8MA&ixlib=rb-4.0.3&q=80&w=1080'}
-
-person = {"friend": [{"name": "Katarzyna", "lastname": "testNowakowska", 'user_id':10}, {"name": "Test1", "lastname": "test2", 'user_id':2},
-                     {"name": "Test1", "lastname": "test2", 'user_id':3}, {"name": "Test1", "lastname": "test2",  'user_id':4}]}
-
-cost = {
-    "any": True,
-    "for_trip": [{
-        "id": '36',
-        "name": 'Rumunia',
-        "totalCost": 123123,
-        "balance": {"amount": 123, "positive": True},
-        "costs": [
-            {
-                "name": 'Paliwo',
-                "who_pay": {"name": 'Tomasz', "was_you": True},
-                "cost": 123,
-                "split_by": ['name1', 'name2'],
-                "unit_cost": 12,
-                "return": 123
-            },
-            {
-                "name": 'Hotel',
-                "who_pay": {"name": 'Elilia', "was_you": False},
-                "cost": 123,
-                "split_by": ['name1', 'name2'],
-                "unit_cost": 12,
-                "return": 123
-            }
-        ]
-    },
-        {
-            "id": '37',
-            "name": 'Polska',
-            "totalCost": 1223,
-            "balance": {"amount": 13, "positive": False},
-            "costs": [
-                {
-                    "name": 'Hotel',
-                    "who_pay": {"name": 'Emi', "was_you": False},
-                    "cost": 1223,
-                    "split_by": ['name3', 'name2'],
-                    "unit_cost": 13572,
-                    "return": 123453
-                },
-                {
-                    "name": 'Hotel',
-                    "who_pay": {"name": 'Emi', "was_you": False},
-                    "cost": 12324,
-                    "split_by": ['name1', 'name2'],
-                    "unit_cost": 12754,
-                    "return": 122343
-                }
-            ]
-        }]
-
-}
-
 
 def login_page_view(request):
     if request.method == 'POST':
@@ -109,7 +46,7 @@ def create_trip_view(request):
 
     return render(request, 'trip_calculator/create_trip.html',
               {'menu': menu, 'background': background,
-               'person': FriendController(request.session.get('user_id')).get_Friend_list()})
+               'person': FriendController(request.session.get('user_id')).get_friend_list()})
 
 
 @login_required
@@ -139,11 +76,10 @@ def home_view(request):
     menu = {"current_page": 'home view'}
     user_id = request.session.get('user_id')
     trip = trip_controller.get_all_trips_with_details(user_id)
-    friend = FriendController(request.session.get('user_id')).get_Friend_list()
-
+    friend = FriendController(user_id).get_friend_list()
+    costs = trip_controller.get_all_cost_details(user_id)
 
     user = {'name': 'Tomasz', 'lastname': 'Leśniak', 'email': 'tomasz1lesniak@gmail.com', 'added': '12-12-2023'}
 
     return render(request, 'trip_calculator/home_view.html',
-                  {'cost': cost, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user,
-                   'person': person, 'background': background})
+                  {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

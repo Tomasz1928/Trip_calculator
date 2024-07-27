@@ -33,30 +33,37 @@ class Trip(models.Model):
 
 
 class UserTrip(models.Model):
-    trip_id = models.IntegerField()
-    user_id = models.IntegerField()
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('trip', 'user')
 
 
 class Invitation(models.Model):
     email = models.EmailField()
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     active = models.BooleanField(default=False)
 
 
 class Cost(models.Model):
     cost_id = models.AutoField(primary_key=True)
-    trip_id = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    payer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    payer = models.ForeignKey(User, on_delete=models.CASCADE)
     cost_name = models.CharField(max_length=255)
-    value = models.IntegerField()
+    value = models.DecimalField(max_digits=10, decimal_places=2)
+
 
 
 class Splited(models.Model):
-    cost_id = models.ForeignKey(Cost, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    cost = models.ForeignKey(Cost, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class Friend(models.Model):
-    user_id = models.IntegerField()
-    friend_id = models.IntegerField()
+    user = models.ForeignKey(User, related_name='friends', on_delete=models.CASCADE)
+    friend = models.ForeignKey(User, related_name='friend_of', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'friend')

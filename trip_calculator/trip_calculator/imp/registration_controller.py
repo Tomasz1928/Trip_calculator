@@ -1,18 +1,20 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from trip_calculator.imp.email_controller import EmailSender
-from trip_calculator import models
 import json
 import secrets
 import string
 
+def get_user_model():
+    from trip_calculator.models import User
+    return User
 
 class CustomUserManager(BaseUserManager):
-    def _create_user_in_DB_(self, email_address, firstname, lastname, password_hashed):
-        if self.model is None:
-            raise ValueError("Model has not been correctly set.")
+    def _create_user_in_DB_(self, email, firstname, lastname, password_hashed):
+        if not email:
+            raise ValueError("The Email field must be set")
         user = self.model(
-            email=email_address,
+            email=email,
             firstname=firstname,
             lastname=lastname,
             password=password_hashed
@@ -43,44 +45,43 @@ class CustomUserManager(BaseUserManager):
     def get_user_id_by_email(self, email):
         return self.get_queryset().get(email=email).user_id
 
-    def get_user_by_ID(self, user_id):
+    def get_user_by_id(self, user_id):
         return self.get_queryset().get(user_id=user_id)
 
     def check_if_email_exists(self, email):
         return self.filter(email=email).exists()
 
-    def register_user(self, email_address, firstname, lastname):
-        if self.check_if_email_exists(email_address):
+    def register_user(self, email, firstname, lastname):
+        if self.check_if_email_exists(email):
             return {"registration_pass": False}
         else:
             password = generate_random_password()
             password_hashed = make_password(password)
-            self._create_user_in_DB_(email_address, firstname, lastname, password_hashed)
+            self._create_user_in_DB_(email, firstname, lastname, password_hashed)
             send = EmailSender()
-            send.set_email(email_address)
+            send.set_email(email)
             send.set_password(password)
             send.generate_registration_message()
             send.send_email()
             return {"registration_pass": True}
 
-    def invite_user(self, user_id, email_address):
+    def invite_user(self, user_id, email):
         from trip_calculator.imp.friend_controller import FriendController
-        if self.check_if_email_exists(email_address):
-            friend_id = self.get_user_id_by_email(email_address)
-            print(friend_id)
+        if self.check_if_email_exists(email):
+            friend_id = self.get_user_id_by_email(email)
             new_friend = FriendController(user_id)
-            new_friend.add_friend(self.get_user_id_by_email(email_address))
+            new_friend.add_friend(friend_id)
             return {"registration_pass": False}
         else:
             password = generate_random_password()
             password_hashed = make_password(password)
-            self._create_user_in_DB_(email_address, '-', '-', password_hashed)
+            self._create_user_in_DB_(email, '-', '-', password_hashed)
 
             new_friend = FriendController(user_id)
-            new_friend.add_friend(int(self.get_user_id_by_email(email_address)))
+            new_friend.add_friend(self.get_user_id_by_email(email))
 
             send = EmailSender()
-            send.set_email(email_address)
+            send.set_email(email)
             send.set_password(password)
             send.generate_invitation_message()
             send.send_email()
@@ -88,8 +89,9 @@ class CustomUserManager(BaseUserManager):
 
     def recovery(self, email):
         if self.check_if_email_exists(email):
+            user = self.get_by_natural_key(email)
             new_password = generate_random_password()
-            self._update_user_(self.get_by_user_id(email), password=new_password)
+            self._update_user_(user.user_id, password=new_password)
             recovery_message = EmailSender()
             recovery_message.set_email(email)
             recovery_message.generate_recovery_message()
@@ -100,16 +102,18 @@ class CustomUserManager(BaseUserManager):
 
 
 def registration(data):
-    return models.User.objects.register_user(data['email'], data['firstname'], data['lastname'])
+    User = get_user_model()
+    return User.objects.register_user(data['email'], data['firstname'], data['lastname'])
 
 
 def invite_user(user_id, data):
-    data = json.loads(data['friend'])
-    for user in data:
-        models.User.objects.invite_user(user_id, user['email'])
+    User = get_user_model()
+    friends_data = json.loads(data['friend'])
+    for friend in friends_data:
+        User.objects.invite_user(user_id, friend['email'])
 
 
 def generate_random_password(length=12):
     characters = string.ascii_letters + string.digits
-    password = ''.join(secrets.choice(characters) for i in range(length))
+    password = ''.join(secrets.choice(characters) for _ in range(length))
     return password

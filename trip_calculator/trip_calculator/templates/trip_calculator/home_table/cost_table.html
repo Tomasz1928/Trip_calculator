@@ -7,7 +7,7 @@
             <th scope="col">Payer</th>
             <th scope="col">Split</th>
             <th scope="col">Cost</th>
-            <th scope="col">Unit cost</th>
+            <th scope="col">Cost per person</th>
             <th scope="col">Return</th>
         </tr>
         </thead>
@@ -27,7 +27,7 @@
                         aria-labelledby="dropdownMenuButtonFriend"
                         style="width: 100px; max-height: 250px; white-space: nowrap; overflow-y: auto;">
                         {% for name in cost.split_by %}
-                        <li class="ps-2 pe-2">{{ name }}</li>
+                        <li class="ps-2 pe-2">{{ name.firstname }}</li>
                         {% endfor %}
                     </ul>
                 </div>
