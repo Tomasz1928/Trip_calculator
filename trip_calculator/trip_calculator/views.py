@@ -49,8 +49,15 @@ def logout_endpoint(request):
     return redirect("login_view")
 
 
+@login_required()
 def edit_friend_endpoint(request):
     FriendController(request.session.get('user_id')).delete_friend(request.GET['friend_id'])
+    return redirect("home_view")
+
+
+@login_required()
+def edit_account_endpoint(request):
+    print(request.POST)
     return redirect("home_view")
 
 
@@ -94,14 +101,12 @@ def add_cost_view(request, trip_id):
 
 @login_required
 def home_view(request):
-    menu = {"current_page": 'home view'}
+    menu = {"current_page": 'Home view'}
     user_id = request.session.get('user_id')
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
-    print(friend)
     costs = trip_controller.get_all_cost_details(user_id)
     user = registration_controller.get_user_infor(user_id)
-    print(user)
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

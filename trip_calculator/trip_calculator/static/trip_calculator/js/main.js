@@ -61,4 +61,43 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 
+
+    document.querySelectorAll("[id^='account-edit-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const p = document.getElementById('account-update-modal-p')
+            const input = document.getElementById('account-update-modal-input')
+            const label = document.getElementById('account-update-modal-label')
+            const clickedButton = event.currentTarget.getAttribute('data-value')
+
+            switch (clickedButton) {
+                case 'firstname':
+                    p.textContent = 'Provide your new firstname'
+                    input.setAttribute('name','firstname')
+                    input.setAttribute('type', 'text')
+                    label.textContent= 'Firstname'
+                    break;
+
+                case 'lastname':
+                    p.textContent = 'Provide your new lastname'
+                    input.setAttribute('name','lastname')
+                    input.setAttribute('type', 'text')
+                    label.textContent= 'Lastname'
+                    break;
+
+                case 'email':
+                    p.textContent = 'Provide your new email'
+                    input.setAttribute('name','email')
+                    input.setAttribute('type', 'email')
+                    label.textContent= 'Email'
+                    break;
+
+                case 'password':
+                    p.textContent = 'Provide your new password'
+                    input.setAttribute('name','password')
+                    input.setAttribute('type', 'password')
+                    label.textContent= 'Password'
+                    break;
+            }
+        })
+    })
 });

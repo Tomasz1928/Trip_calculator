@@ -17,7 +17,9 @@
         </tr>
         </tbody>
         <caption class="pt-2">
-            <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi footer-tabel-button">Edit account</a>
+           <button type="button" class="btn btn-primary table-button" data-bs-toggle="modal" id="edit-account-button"
+                                    data-bs-target="#account-common-edit-modal">Edit account</button>
         </caption>
     </table>
 </div>
+{% include 'trip_calculator/home_table/account_edit_modal.html' %}

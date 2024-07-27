@@ -21,7 +21,7 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def _update_user_(self, user_id, **kwargs):
+    def update_user(self, user_id, **kwargs):
         update_user = self.get_queryset().get(user_id=user_id)
 
         if 'firstname' in kwargs and kwargs['firstname']:
@@ -91,7 +91,7 @@ class CustomUserManager(BaseUserManager):
         if self.check_if_email_exists(email):
             user = self.get_by_natural_key(email)
             new_password = generate_random_password()
-            self._update_user_(user.user_id, password=new_password)
+            self.update_user(user.user_id, password=new_password)
             recovery_message = EmailSender()
             recovery_message.set_email(email)
             recovery_message.set_password(new_password)
@@ -116,6 +116,10 @@ def get_user_infor(user_id):
     user = get_user_model()
     data = user.objects.get(user_id=user_id)
     return {'name': data.firstname, 'lastname': data.lastname, 'email': data.email, 'added': data.created_at.strftime("%d.%m.%Y"), 'user_id': user_id}
+
+
+def update_account(user_id, data):
+    pass
 
 
 def invite_user(user_id, data):
