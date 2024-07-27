@@ -1,8 +1,7 @@
 from trip_calculator.models import Trip, Cost, Splited, User, UserTrip
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-import ast, json
-
+import ast
 
 class TripController:
 

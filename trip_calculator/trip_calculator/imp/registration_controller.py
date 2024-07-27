@@ -1,9 +1,8 @@
 from django.contrib.auth.models import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from trip_calculator.imp.email_controller import EmailSender
-import json
-import secrets
-import string
+import json, secrets, string
+
 
 def get_user_model():
     from trip_calculator.models import User
@@ -46,6 +45,7 @@ class CustomUserManager(BaseUserManager):
         return self.get_queryset().get(email=email).user_id
 
     def get_user_by_id(self, user_id):
+        print(user_id)
         return self.get_queryset().get(user_id=user_id)
 
     def check_if_email_exists(self, email):
@@ -65,7 +65,7 @@ class CustomUserManager(BaseUserManager):
             send.send_email()
             return {"registration_pass": True}
 
-    def invite_user(self, user_id, email):
+    def invite_user(self, user_id, email, firstname, lastname):
         from trip_calculator.imp.friend_controller import FriendController
         if self.check_if_email_exists(email):
             friend_id = self.get_user_id_by_email(email)
@@ -75,7 +75,7 @@ class CustomUserManager(BaseUserManager):
         else:
             password = generate_random_password()
             password_hashed = make_password(password)
-            self._create_user_in_DB_(email, '-', '-', password_hashed)
+            self._create_user_in_DB_(email, firstname, lastname, password_hashed)
 
             new_friend = FriendController(user_id)
             new_friend.add_friend(self.get_user_id_by_email(email))
@@ -94,6 +94,7 @@ class CustomUserManager(BaseUserManager):
             self._update_user_(user.user_id, password=new_password)
             recovery_message = EmailSender()
             recovery_message.set_email(email)
+            recovery_message.set_password(new_password)
             recovery_message.generate_recovery_message()
             recovery_message.send_email()
             return {"recovery_pass": True}
@@ -102,15 +103,26 @@ class CustomUserManager(BaseUserManager):
 
 
 def registration(data):
-    User = get_user_model()
-    return User.objects.register_user(data['email'], data['firstname'], data['lastname'])
+    user = get_user_model()
+    return user.objects.register_user(data['email'], data['firstname'], data['lastname'])
+
+
+def recovery(data):
+    user = get_user_model()
+    return user.objects.recovery(data['email'])
+
+
+def get_user_infor(user_id):
+    user = get_user_model()
+    data = user.objects.get(user_id=user_id)
+    return {'name': data.firstname, 'lastname': data.lastname, 'email': data.email, 'added': data.created_at.strftime("%d.%m.%Y"), 'user_id': user_id}
 
 
 def invite_user(user_id, data):
-    User = get_user_model()
+    user = get_user_model()
     friends_data = json.loads(data['friend'])
     for friend in friends_data:
-        User.objects.invite_user(user_id, friend['email'])
+        user.objects.invite_user(user_id, friend['email'], friend['firstname'], friend['lastname'])
 
 
 def generate_random_password(length=12):

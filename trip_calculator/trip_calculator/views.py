@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from trip_calculator.imp import registration_controller, trip_controller
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from trip_calculator.imp.friend_controller import FriendController
 
 background = {
     'img_url': 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzIyMjJ8MHwxfHNlYXJjaHwxfHxyYW5kb20lMjBuYXR1cmFsJTIwdmlld3xlbnwwfHx8fDE3MjA3MjU1MDV8MA&ixlib=rb-4.0.3&q=80&w=1080'}
+
 
 def login_page_view(request):
     if request.method == 'POST':
@@ -37,6 +38,22 @@ def registration_view(request):
                   {"registration": registration, 'background': background})
 
 
+def recovery_endpoint(request):
+    registration_controller.recovery(request.GET)
+    return redirect("login_view")
+
+
+@login_required()
+def logout_endpoint(request):
+    logout(request)
+    return redirect("login_view")
+
+
+def edit_friend_endpoint(request):
+    FriendController(request.session.get('user_id')).delete_friend(request.GET['friend_id'])
+    return redirect("home_view")
+
+
 @login_required
 def create_trip_view(request):
     menu = {"current_page": 'Create new trip'}
@@ -47,6 +64,10 @@ def create_trip_view(request):
     return render(request, 'trip_calculator/create_trip.html',
               {'menu': menu, 'background': background,
                'person': FriendController(request.session.get('user_id')).get_friend_list()})
+
+
+
+
 
 
 @login_required
@@ -77,9 +98,10 @@ def home_view(request):
     user_id = request.session.get('user_id')
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
+    print(friend)
     costs = trip_controller.get_all_cost_details(user_id)
-
-    user = {'name': 'Tomasz', 'lastname': 'Leśniak', 'email': 'tomasz1lesniak@gmail.com', 'added': '12-12-2023'}
+    user = registration_controller.get_user_infor(user_id)
+    print(user)
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

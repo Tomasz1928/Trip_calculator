@@ -6,6 +6,7 @@
             <th scope="col">Lastname</th>
             <th scope="col">Trips</th>
             <th scope="col">Added</th>
+            <th scope="col"></th>
         </tr>
         </thead>
 
@@ -34,11 +35,16 @@
             <td scope="col">-</td>
             {% endif %}
             <td scope="col">{{ friend.added }}</td>
+            <td scope="col"><button type="button" class="btn btn-danger" data-bs-toggle="modal" id="edit-friend-button-{{ friend.user_id }}"
+                                    data-bs-target="#friend-edit-modal" data-value-user_id="{{ user.user_id }}"
+                                    data-value-friend_id="{{ friend.user_id }}">Delete</button></td>
         </tr>
         {% endfor %}
         </tbody>
         <caption class="pt-2">
-            <a href="{% url 'invite_friend_view' %}" class="btn btn-primary bi footer-tabel-button">Edit friend</a>
+        <caption class="pt-2">
+            <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi footer-tabel-button">Add friend</a>
         </caption>
     </table>
 </div>
+{% include 'trip_calculator/home_table/friend_edit_modal.html' %}

@@ -49,4 +49,16 @@ document.addEventListener("DOMContentLoaded", () => {
         return arr.reduce((acc, val) => acc.concat(val), []);
     }
 
+
+    document.querySelectorAll("[id^='edit-friend-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputUser_id = document.querySelector('[id = "friend-edit-modal"] input[name="user_id"]')
+            const inputFriend_id = document.querySelector('[id = "friend-edit-modal"] input[name="friend_id"]')
+            const clickedButton = event.currentTarget
+            inputUser_id.setAttribute('value', clickedButton.getAttribute('data-value-user_id'))
+            inputFriend_id.setAttribute('value', clickedButton.getAttribute('data-value-friend_id'))
+        })
+    })
+
+
 });

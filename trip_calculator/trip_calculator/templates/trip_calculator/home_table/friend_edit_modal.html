@@ -1,0 +1,49 @@
+<div class="modal fade" id="friend-edit-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Delete Friend</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <form action="{% url 'edit_friend_endpoint' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_id" value="">
+                            <input type="hidden" name="friend_id" value="">
+
+
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-12">
+                                    <div class="justify-content-center form-floating">
+                                        <p class="h5 text-center fs-5 fs-md-4">Are you sure You want to remove Your
+                                            friend?</p>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                                                        aria-label="Close">Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-danger"
+                                                        id="recovery-submit-button">Delete
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
