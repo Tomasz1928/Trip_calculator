@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from trip_calculator.imp.registration_controller import CustomUserManager
+from  trip_calculator.imp.user_menager import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -14,11 +14,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    objects = CustomUserManager()
+
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    objects = UserManager()
     def __str__(self):
         return self.email
 
