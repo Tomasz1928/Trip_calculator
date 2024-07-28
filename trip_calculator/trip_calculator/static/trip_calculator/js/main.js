@@ -64,40 +64,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelectorAll("[id^='account-edit-button-']").forEach(button => {
         button.addEventListener('click', (event) => {
-            const p = document.getElementById('account-update-modal-p')
-            const input = document.getElementById('account-update-modal-input')
-            const label = document.getElementById('account-update-modal-label')
-            const clickedButton = event.currentTarget.getAttribute('data-value')
+            const p = document.getElementById('account-update-modal-p');
+            const input = document.getElementById('account-update-modal-input');
+            const label = document.getElementById('account-update-modal-label');
+            const clickedButton = event.currentTarget.getAttribute('data-value');
+            const submitButton = document.getElementById('account-edit-modal-submit-button');
 
-            switch (clickedButton) {
-                case 'firstname':
-                    p.textContent = 'Provide your new firstname'
-                    input.setAttribute('name','firstname')
-                    input.setAttribute('type', 'text')
-                    label.textContent= 'Firstname'
-                    break;
-
-                case 'lastname':
-                    p.textContent = 'Provide your new lastname'
-                    input.setAttribute('name','lastname')
-                    input.setAttribute('type', 'text')
-                    label.textContent= 'Lastname'
-                    break;
-
-                case 'email':
-                    p.textContent = 'Provide your new email'
-                    input.setAttribute('name','email')
-                    input.setAttribute('type', 'email')
-                    label.textContent= 'Email'
-                    break;
-
-                case 'password':
-                    p.textContent = 'Provide your new password'
-                    input.setAttribute('name','password')
-                    input.setAttribute('type', 'password')
-                    label.textContent= 'Password'
-                    break;
+            const settings = {
+                'firstname': { pText: 'Provide your new firstname', inputName: 'firstname', inputType: 'text', labelText: 'Firstname' },
+                'lastname': { pText: 'Provide your new lastname', inputName: 'lastname', inputType: 'text', labelText: 'Lastname' },
+                'email': { pText: 'Provide your new email', inputName: 'email', inputType: 'email', labelText: 'Email' },
+                'password': { pText: 'Provide your new password', inputName: 'password', inputType: 'password', labelText: 'Password' }
             }
-        })
-    })
+
+            const setting = settings[clickedButton];
+
+            if (setting) {
+                p.textContent = setting.pText;
+                submitButton.disabled = true
+                input.setAttribute('name', setting.inputName);
+                input.value = '';
+                input.setAttribute('type', setting.inputType);
+                label.textContent = setting.labelText;
+            }
+            input.addEventListener('input', () => {
+                if (input.value !== '') {
+                    submitButton.disabled = false
+                }
+            })
+        });
+    });
 });

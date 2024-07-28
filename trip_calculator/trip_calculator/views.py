@@ -57,7 +57,7 @@ def edit_friend_endpoint(request):
 
 @login_required()
 def edit_account_endpoint(request):
-    print(request.POST)
+    registration_controller.update_account(request.session.get('user_id'), request.POST)
     return redirect("home_view")
 
 
