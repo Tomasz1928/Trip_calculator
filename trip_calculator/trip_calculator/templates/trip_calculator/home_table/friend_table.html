@@ -35,14 +35,14 @@
             <td scope="col">-</td>
             {% endif %}
             <td scope="col">{{ friend.added }}</td>
-            <td scope="col"><button type="button" class="btn btn-danger table-button" data-bs-toggle="modal" id="edit-friend-button-{{ friend.user_id }}"
+            <td scope="col"><button class="btn btn-danger btn-sm table-button" data-bs-toggle="modal" id="edit-friend-button-{{ friend.user_id }}"
                                     data-bs-target="#friend-edit-modal" data-value-user_id="{{ user.user_id }}"
                                     data-value-friend_id="{{ friend.user_id }}">Delete</button></td>
         </tr>
         {% endfor %}
         </tbody>
         <caption class="pt-2">
-            <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi small-button">Add friend</a>
+            <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi btn-sm footer-tabel-button">Add friend</a>
         </caption>
     </table>
 </div>

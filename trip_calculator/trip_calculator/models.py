@@ -55,10 +55,10 @@ class Cost(models.Model):
     value = models.DecimalField(max_digits=10, decimal_places=2)
 
 
-
 class Splited(models.Model):
     cost = models.ForeignKey(Cost, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    payment = models.BooleanField(default=False)
 
 
 class Friend(models.Model):

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from trip_calculator.imp import registration_controller, trip_controller
+from trip_calculator.imp import registration_controller, trip_controller, cost_controller
 from django.contrib.auth import authenticate, login, logout
 from trip_calculator.imp.friend_controller import FriendController
 
@@ -88,7 +88,7 @@ def add_cost_view(request, trip_id):
     menu = {"current_page": 'Add trip cost'}
     user_id = request.session.get('user_id')
     if request.method == 'POST':
-        trip_controller.add_cost(user_id, trip_id, request.POST)
+        cost_controller.add_cost(user_id, trip_id, request.POST)
         return redirect("home_view")
     trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
     trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_squad))
@@ -101,8 +101,10 @@ def home_view(request):
     user_id = request.session.get('user_id')
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
-    costs = trip_controller.get_all_cost_details(user_id)
+    costs = cost_controller.get_all_cost_details(user_id)
     user = registration_controller.get_user_infor(user_id)
+
+    cost_controller.costReturned(18,4,True)
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

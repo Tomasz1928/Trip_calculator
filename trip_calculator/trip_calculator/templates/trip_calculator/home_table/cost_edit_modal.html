@@ -1,9 +1,9 @@
-<div class="modal fade" id="friend-edit-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<div class="modal fade" id="cost-edit-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5">Delete Friend</h1>
+                <h1 class="modal-title fs-5">Update payment status</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -14,14 +14,23 @@
                         <form action="{% url 'edit_friend_endpoint' %}">
                             {% csrf_token %}
                             <input type="hidden" name="user_id" value="">
-                            <input type="hidden" name="friend_id" value="">
-
+                            <input type="hidden" name="cost_id" value="">
 
                             <div class="row justify-content-center mb-3">
-                                <div class="col-12">
-                                    <div class="justify-content-center form-floating">
-                                        <p class="h5 text-center fs-5 fs-md-4">Are you sure You want to remove Your
-                                            friend?</p>
+                                <div class="col-12 text-center">
+                                    <div class="form-floating">
+                                        <p class="h5 fs-5 fs-md-4">Did user return your money?</p>
+
+                                        <div class="btn-group p-3" role="group"
+                                             aria-label="Basic radio toggle button group">
+                                            <input type="radio" class="btn-check" name="payment" value="True"
+                                                   id="btnradio1" autocomplete="off" checked>
+                                            <label class="btn btn-outline-success" for="btnradio1">Yes</label>
+
+                                            <input type="radio" class="btn-check" name="payment" value="False"
+                                                   id="btnradio2" autocomplete="off">
+                                            <label class="btn btn-outline-danger" for="btnradio2">No</label>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -32,8 +41,8 @@
                                                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
                                                         aria-label="Close">Cancel
                                                 </button>
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                        id="recovery-submit-button">Delete
+                                                <button type="submit" class="btn btn-primary btn-sm"
+                                                        id="recovery-submit-button">Update
                                                 </button>
                                             </div>
                                         </div>
