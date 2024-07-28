@@ -34,7 +34,7 @@
             </td>
             <td scope="col">{{ cost.cost }}</td>
             <td scope="col">{{ cost.unit_cost }}</td>
-            <td scope="col"> {% if cost.who_pay.was_you %}+ {% else %}- {% endif %} {{ cost.return }}</td>
+            <td scope="col" style="color:{% if cost.return == '0.00' %}black{% elif cost.who_pay.was_you %}green{% else %}red{% endif %};">{{ cost.return }}</td>
         </tr>
         {% endfor %}
 

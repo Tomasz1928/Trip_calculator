@@ -71,10 +71,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const submitButton = document.getElementById('account-edit-modal-submit-button');
 
             const settings = {
-                'firstname': { pText: 'Provide your new firstname', inputName: 'firstname', inputType: 'text', labelText: 'Firstname' },
-                'lastname': { pText: 'Provide your new lastname', inputName: 'lastname', inputType: 'text', labelText: 'Lastname' },
-                'email': { pText: 'Provide your new email', inputName: 'email', inputType: 'email', labelText: 'Email' },
-                'password': { pText: 'Provide your new password', inputName: 'password', inputType: 'password', labelText: 'Password' }
+                'firstname': { pText: 'Provide your new firstname', inputName: 'firstname', inputType: 'text', placeholder: 'Firstname' },
+                'lastname': { pText: 'Provide your new lastname', inputName: 'lastname', inputType: 'text', placeholder: 'Lastname' },
+                'email': { pText: 'Provide your new email', inputName: 'email', inputType: 'email', placeholder: 'Email' },
+                'password': { pText: 'Provide your new password', inputName: 'password', inputType: 'password', placeholder: 'Password' }
             }
 
             const setting = settings[clickedButton];
@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 input.setAttribute('name', setting.inputName);
                 input.value = '';
                 input.setAttribute('type', setting.inputType);
-                label.textContent = setting.labelText;
+                input.setAttribute('placeholder', setting.placeholder);
             }
             input.addEventListener('input', () => {
                 if (input.value !== '') {

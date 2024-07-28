@@ -73,10 +73,6 @@ def create_trip_view(request):
                'person': FriendController(request.session.get('user_id')).get_friend_list()})
 
 
-
-
-
-
 @login_required
 def invite_friend_view(request):
     menu = {"current_page": 'Invite friend'}

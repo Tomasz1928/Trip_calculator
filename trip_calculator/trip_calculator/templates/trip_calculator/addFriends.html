@@ -6,82 +6,93 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trip cost login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.5.0/font/bootstrap-icons.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'trip_calculator/style/add_friend.css' %}">
     <link rel="stylesheet" href="{% static 'trip_calculator/style/common.css' %}">
 </head>
 
 <body class="background-img-style background-img-style" style="background-image: url('{{ background.img_url }}');">
-    {% include 'trip_calculator/navigation.html' %}
+{% include 'trip_calculator/navigation.html' %}
 
-    {% csrf_token %}
+{% csrf_token %}
 <div id="form_content">
 </div>
-    <main>
+<main>
 
-        <div class="container container-main border border-dark-subtle rounded">
-            <div class="row">
-                <div class="col-12">
-                    <div class="justify-content-center mt-3 mb-3">
-                        <p class="h2 text-center">Here you can invite friends</p>
+    <div class="container container-main border border-dark-subtle rounded">
+        <div class="row">
+            <div class="col-12">
+                <div class="justify-content-center mt-3 mb-3">
+                    <p class="h2 text-center">Here you can invite friends</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="container-inputs mb-3 border border-dark-subtle rounded"
+                     style=" margin-top: 0; padding-top:0">
+
+                    <div class="row mb-2 mt-2">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control" id="firstname-input" name="name"
+                                   placeholder="Firstname">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 mt-2">
+                        <div class="col-sm-12">
+                            <input type="text" class="form-control small-input" id="lastname-input" name="lastname"
+                                   placeholder="Lastname">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2 mt-2">
+                        <div class="col-sm-12">
+                            <input type="email" class="form-control small-input" id="email-input" name="email"
+                                   placeholder="Email">
+                        </div>
+                    </div>
+
+                    <div class="form-floating">
+                        <button type="button" class="btn btn-success bi small-button" id="add-friend-button" disabled>
+                            Add to table
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-md-4" >
-                    <div class="container-inputs mb-3 border border-dark-subtle rounded" style=" margin-top: 0; padding-top:0">
-                        <div class="form-floating mb-2 mt-2">
-                            <input type="text" class="form-control" id="firstname-input" name="name">
-                            <label for="firstname-input">Firstname</label>
-                        </div>
-
-                        <div class="form-floating mb-2">
-                            <input type="text" class="form-control" id="lastname-input" name="lastname">
-                            <label for="lastname-input">Lastname</label>
-                        </div>
-
-                        <div class="form-floating mb-2">
-                            <input type="email" class="form-control" id="email-input" name="email">
-                            <label for="email-input">Email</label>
-                        </div>
-
-                        <div class="form-floating">
-                            <button type="button" class="btn btn-success bi" id="add-friend-button" disabled>
-                                Add to table
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-8">
-                    <div class="container-table mb-3 border border-dark-subtle rounded" style=" margin-top: 0">
-                        <div class="row justify-content-center p-2">
-                            <div class="table-responsive">
-                                <table class="table table-light table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Firstname</th>
-                                            <th scope="col">Lastname</th>
-                                            <th scope="col">Email</th>
-                                            <th scope="col">Remove</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="table-group-divider" id="table-body"></tbody>
-                                    <caption class="pt-2">
-                                        <button type="button" class="btn btn-success bi footer-tabel-button" id="send-button" style="display: none;" disabled>
-                                            Invite friends
-                                        </button>
-                                    </caption>
-                                </table>
-                            </div>
+            <div class="col-md-8">
+                <div class="container-table mb-3 border border-dark-subtle rounded" style=" margin-top: 0">
+                    <div class="row justify-content-center p-2">
+                        <div class="table-responsive">
+                            <table class="table table-light table-sm">
+                                <thead>
+                                <tr>
+                                    <th scope="col">Firstname</th>
+                                    <th scope="col">Lastname</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Remove</th>
+                                </tr>
+                                </thead>
+                                <tbody class="table-group-divider" id="table-body"></tbody>
+                                <caption class="pt-2">
+                                    <button type="button" class="btn btn-success bi footer-tabel-button"
+                                            id="send-button" style="display: none;" disabled>
+                                        Invite friends
+                                    </button>
+                                </caption>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

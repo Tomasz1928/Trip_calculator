@@ -55,6 +55,15 @@ class EmailSender:
             f'Team Trip Cost Calculator'
         )
 
+    def generate_update_password_message(self) -> None:
+        self.subject = 'No Reply. Your new password for Trip Calculator System'
+        self.message = (
+            f'Update password process finished successfully, below You will found Your new password.\n\n'
+            f'Here is your password: {self.password}\n'
+            f'Best regards,\n'
+            f'Team Trip Cost Calculator'
+        )
+
     def send_email(self) -> None:
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [self.email]

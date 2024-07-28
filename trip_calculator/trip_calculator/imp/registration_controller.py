@@ -43,6 +43,11 @@ class UserController:
             if value:
                 if field == 'password':
                     update_user.password = make_password(value)
+                    send = EmailSender()
+                    send.set_email(User.objects.get_user_by_id(user_id).email)
+                    send.set_password(value)
+                    send.generate_update_password_message()
+                    send.send_email()
                 else:
                     setattr(update_user, field, value)
         update_user.save()
@@ -116,7 +121,7 @@ def get_user_infor(user_id):
 def update_account(user_id, data):
     kwargs = {key: value for key, value in data.items() if value}
     kwargs.pop('csrfmiddlewaretoken', None)
-    print(kwargs)
+    UserController().update_user(user_id, **kwargs)
 
 
 def invite_user(user_id, data):
