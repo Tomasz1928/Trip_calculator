@@ -94,4 +94,20 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         });
     });
+
+        document.querySelectorAll("[id^='edit-cost-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputCostId = document.getElementById('cost-edit-modal-input-cost-id');
+            const inputUserId = document.getElementById('cost-edit-modal-input-user_id');
+            const textWithUsername = document.getElementById('cost-edit-modal-text');
+            const costId = event.currentTarget.getAttribute('data-value-cost-id');
+            const friendId = event.currentTarget.getAttribute('data-value-frieng-id');
+            const friendName = event.currentTarget.getAttribute('data-value-friend-name');
+
+            const text = `Did friend: ${friendName} return your money?`
+            textWithUsername.textContent = text
+            inputCostId.setAttribute('value', costId)
+            inputUserId.setAttribute('value', friendId)
+        });
+    })
 });

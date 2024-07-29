@@ -56,6 +56,12 @@ def edit_friend_endpoint(request):
 
 
 @login_required()
+def edit_cost_endpoint(request):
+    cost_controller.costStatusUpdate(request.POST)
+    return redirect("home_view")
+
+
+@login_required()
 def edit_account_endpoint(request):
     registration_controller.update_account(request.session.get('user_id'), request.POST)
     return redirect("home_view")
@@ -103,8 +109,6 @@ def home_view(request):
     friend = FriendController(user_id).get_friend_list()
     costs = cost_controller.get_all_cost_details(user_id)
     user = registration_controller.get_user_infor(user_id)
-
-    cost_controller.costReturned(18,4,True)
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

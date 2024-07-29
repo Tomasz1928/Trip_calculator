@@ -36,7 +36,8 @@ class CostController:
                             'firstname': User.objects.get_user_by_id(detail['user_id']).firstname} for detail in split_details]
             payer_user_id = cost.payer.user_id
             payer = self._get_user_details([payer_user_id]).get(payer_user_id)
-            cost_details.append({'split': split_users, 'payer': payer, 'cost_name': cost.cost_name,'value': cost.value})
+            cost_details.append({'split': split_users, 'payer': payer, 'cost_name': cost.cost_name,
+                                 'value': cost.value, 'cost_id': cost.cost_id})
         return cost_details
 
     def get_all_trip_cost_for_user_id(self, trip_id, user_id):
@@ -56,11 +57,10 @@ def add_cost(user_id, trip_id, data):
         CostController().add_cost(user_id, trip_id, cost['title'], cost['amount'], sorted(split))
 
 
-def costReturned(cost_id, user_id, payment):
-    data = Splited.objects.get(cost_id=cost_id, user_id=user_id)
-    print(data.payment)
-    data.payment = payment
-    data.save()
+def costStatusUpdate(data):
+    status_update = Splited.objects.get(cost_id=data['cost_id'], user_id=data['user_id'])
+    status_update.payment = data['payment']
+    status_update.save()
 
 
 def get_all_cost_details(user_id):
@@ -84,8 +84,8 @@ def get_all_cost_details(user_id):
         for cost_data in costs_data:
             if any(user['user_id'] == user_id for user in cost_data['split']):
                 data = ToReturn(cost_data, user_id)
-
-                cost = {'name': cost_data['cost_name'],
+                cost = {'cost_id': cost_data['cost_id'],
+                        'name': cost_data['cost_name'],
                         'who_pay': {'name': cost_data['payer']['firstname'],
                                     'was_you': data["payer_was_you"]},
                          'cost': str(cost_data['value']),
