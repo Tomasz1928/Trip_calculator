@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function Overview(data) {
         overview.trip_name.textContent = 'Trip name: ' + data.tripName
-        overview.trip_date.textContent = `Trip date: ' ${data.tripStart} - ${data.tripEnd}`
+        overview.trip_date.textContent = `Trip date: ${data.tripStart} - ${data.tripEnd}`
         overview.trip_description.textContent = 'Trip description: ' + data.tripDescription
         overview.trip_squad.textContent = 'Trip squad: ' + data.tripSquad.join(', ')
     }

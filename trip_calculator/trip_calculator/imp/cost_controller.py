@@ -25,6 +25,11 @@ class CostController:
         cost.value = value
         cost.save()
 
+    def edit_name(self, cost_id, title):
+        cost = Cost.objects.get(cost_id=cost_id)
+        cost.cost_name = title
+        cost.save()
+
     def _get_user_details(self, user_ids):
         users = User.objects.filter(user_id__in=user_ids)
         return {
@@ -43,7 +48,8 @@ class CostController:
             split_details = cost.splited_set.values('user_id', 'payment')
             split_users = [
                 {'user_id': detail['user_id'], 'payment': detail['payment'],
-                 'firstname': User.objects.get_user_by_id(detail['user_id']).firstname}
+                 'firstname': User.objects.get_user_by_id(detail['user_id']).firstname,
+                 'lastname': User.objects.get_user_by_id(detail['user_id']).lastname}
                 for detail in split_details
             ]
             payer = self._get_user_details([cost.payer.user_id]).get(cost.payer.user_id)
@@ -77,6 +83,10 @@ def update_cost_value(data):
     CostController().edit_value(data['cost_id'], data['value'])
 
 
+def update_cost_title(data):
+    CostController().edit_name(data['cost_id'], data['name'])
+
+
 def update_cost_status(data):
     status_update = Splited.objects.get(cost_id=data['cost_id'], user_id=data['user_id'])
     status_update.payment = data['payment']
@@ -85,7 +95,8 @@ def update_cost_status(data):
 
 def manage_cost_action(user_id, data):
     action = data['action']
-    if action not in ['delete', 'update', 'status']:
+
+    if action not in ['delete', 'update', 'status', 'title']:
         raise ValueError("Invalid action specified")
 
     if not CostController().check_if_user_isPayer(user_id, data['cost_id']):
@@ -94,7 +105,8 @@ def manage_cost_action(user_id, data):
     action_map = {
         'delete': lambda: delete_cost(data),
         'update': lambda: update_cost_value(data),
-        'status': lambda: update_cost_status(data)
+        'status': lambda: update_cost_status(data),
+        'title': lambda: update_cost_title(data)
     }
 
     action_map[action]()
@@ -118,16 +130,17 @@ def get_all_cost_details(user_id):
                 data = calculate_to_return(cost_data, user_id)
                 cost = {
                     'cost_id': cost_data['cost_id'], 'name': cost_data['cost_name'],
-                    'who_pay': {'name': cost_data['payer']['firstname'], 'was_you': data["payer_was_you"]},
-                    'cost': str(cost_data['value']), 'split_by': cost_data['split'],
-                    'unit_cost': str(data['unit_cost']), 'return': str(data['to_return'])
+                    'who_pay': {'name': cost_data['payer']['firstname'], 'lastname': cost_data['payer']['lastname'],
+                                'was_you': data["payer_was_you"]}, 'cost': str(cost_data['value']),
+                    'split_by': cost_data['split'], 'unit_cost': str(data['unit_cost']),
+                    'return': str(data['to_return']), 'balance': data['balance']
                 }
                 costs.append(cost)
 
         trip_data.append({
             'id': str(trip_id), 'name': trip_details['name'],
-            'self_cost': str(cost_controller.get_all_trip_cost_for_user_id(trip_id, user_id)), 'costs': costs,
-            'balance': sum(float(cost['cost']) for cost in costs)
+            'self_cost': str(round(cost_controller.get_all_trip_cost_for_user_id(trip_id, user_id), 2)), 'costs': costs,
+            'balance': round(sum(float(cost['balance']) for cost in costs), 2)
         })
 
     all_cost['for_trip'] = trip_data
@@ -135,15 +148,19 @@ def get_all_cost_details(user_id):
 
 
 def calculate_to_return(cost_data, user_id):
-    payer_was_you = cost_data['payer']['user_id'] == user_id
+    payer_was_you = CostController().check_if_user_isPayer(user_id, cost_data['cost_id'])
     unit_cost = round(cost_data['value'] / len(cost_data['split']), 2)
 
     if payer_was_you:
         count_user_who_dont_pay = sum(1 for user in cost_data['split'] if not user['payment'])
-        return {'payer_was_you': payer_was_you, 'unit_cost': unit_cost, 'to_return': unit_cost * count_user_who_dont_pay}
+        return {'payer_was_you': payer_was_you, 'unit_cost': unit_cost,
+                'to_return': unit_cost * count_user_who_dont_pay,
+                'balance': unit_cost * count_user_who_dont_pay}
     else:
         user_data = next(user for user in cost_data['split'] if user['user_id'] == user_id)
-        return {'payer_was_you': payer_was_you, 'unit_cost': unit_cost, 'to_return': 0 if user_data['payment'] else unit_cost}
+        return {'payer_was_you': payer_was_you, 'unit_cost': unit_cost,
+                'to_return': 0 if user_data['payment'] else unit_cost,
+                'balance': 0 if user_data['payment'] else (-unit_cost)}
 
 
 

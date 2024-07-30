@@ -1,4 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+
+
     const tripButton = document.getElementById("main_trip");
     const friendButton = document.getElementById("main_friend");
     const costButtons = document.querySelectorAll('[id^="main-cost-button-"]');
@@ -112,12 +116,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const inputTripId = document.getElementById('cost-status-modal-input-trip-id');
             const textArea = document.getElementById('cost-status-modal-text');
             const costId = event.currentTarget.getAttribute('data-value-cost-id');
-            const friendId = event.currentTarget.getAttribute('data-value-frieng-id');
+            const friendId = event.currentTarget.getAttribute('data-value-friend-id');
             const tripId = event.currentTarget.getAttribute('data-value-trip-id');
             const friendName = event.currentTarget.getAttribute('data-value-friend-name');
 
 
-            const text = `Did friend: ${friendName} return your money?`
+            const text = `Did friend ${friendName} return your money?`
             textArea.textContent = text
             inputCostId.setAttribute('value', costId)
             inputUserId.setAttribute('value', friendId)
@@ -151,15 +155,38 @@ document.addEventListener("DOMContentLoaded", () => {
             const costId = event.currentTarget.getAttribute('data-value-cost-id');
             const tripId = event.currentTarget.getAttribute('data-value-trip-id');
             const costName = event.currentTarget.getAttribute('data-value-cost-name');
-
+            const costValue = event.currentTarget.getAttribute('data-value-cost-value');
 
             const text = `Input new cost value for: ${costName}`
             textArea.textContent = text
             inputCostId.setAttribute('value', costId)
             inputValue.value = null
+            inputValue.setAttribute('placeholder', costValue)
             inputTripId.setAttribute('value', tripId)
         });
     })
+
+
+    document.querySelectorAll("[id^='edit-cost-title-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputCostId = document.getElementById('cost-title-modal-input-cost-id');
+            const inputTitle = document.getElementById('cost-title-modal-input-value');
+            const inputTripId = document.getElementById('cost-title-modal-input-trip-id');
+            const textArea = document.getElementById('cost-title-modal-text');
+            const costId = event.currentTarget.getAttribute('data-value-cost-id');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const costTitle = event.currentTarget.getAttribute('data-value-cost-title');
+
+            const text = `Input new cost title`
+            textArea.textContent = text
+            inputCostId.setAttribute('value', costId)
+            inputTitle.value = null
+            inputTitle.setAttribute('placeholder', costTitle)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+
 
     openUpdatedTab()
 });

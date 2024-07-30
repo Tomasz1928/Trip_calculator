@@ -43,7 +43,17 @@ background-color: rgba(224, 255, 255, 0.5);
         max-width: 250px;
     }
 
+.dropdown-list{
+    width: 200px
+    }
+
 @media (max-width: 576px) {
+
+.table-container {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
     .table-responsive {
         overflow-x: auto;
     }
@@ -62,7 +72,7 @@ background-color: rgba(224, 255, 255, 0.5);
     }
 
     .dropdown-list{
-    width: 150px
+    width: 175px
     }
 
     .table-button{

@@ -58,8 +58,14 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         const colButton = document.createElement('td');
-        const button = document.createElement('button');
-        button.className = 'btn-close';
+        const button = document.createElement('a');
+        button.setAttribute('href','#')
+        button.className = 'd-flex';
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-trash ms-1';
+        icon.style.color = 'red';
+
+        button.appendChild(icon);
         button.addEventListener("click", () => { tableBody.removeChild(newTableRow); checkTableData() });
         colButton.appendChild(button);
 

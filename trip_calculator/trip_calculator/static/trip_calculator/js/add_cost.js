@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dropdownDiv.className = 'dropdown';
 
         const button = document.createElement('button');
-        button.className = 'btn btn-primary dropdown-toggle table-button';
+        button.className = 'btn btn-primary dropdown-toggle btn-sm table-button';
         button.type = 'button';
         button.id = 'dropdownMenuButton';
         button.setAttribute('data-bs-toggle', 'dropdown');
@@ -110,8 +110,15 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         const colButton = document.createElement('td');
-        const button = document.createElement('button');
-        button.className = 'btn-close';
+        const button = document.createElement('a');
+        button.setAttribute('href','#')
+        button.className = 'd-flex';
+        const icon = document.createElement('i');
+        icon.className = 'bi bi-trash ms-1';
+        icon.className = 'bi bi-trash ms-1';
+        icon.style.color = 'red';
+
+        button.appendChild(icon);
         button.addEventListener("click", () => { tableBody.removeChild(newTableRow); checkTableData() });
         colButton.appendChild(button);
 
