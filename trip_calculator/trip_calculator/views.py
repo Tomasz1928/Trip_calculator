@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from trip_calculator.imp import registration_controller, trip_controller, cost_controller
 from django.contrib.auth import authenticate, login, logout
@@ -52,19 +54,26 @@ def logout_endpoint(request):
 @login_required()
 def edit_friend_endpoint(request):
     FriendController(request.session.get('user_id')).delete_friend(request.GET['friend_id'])
-    return redirect("home_view")
+    response = HttpResponseRedirect(reverse("home_view"))
+    response.set_cookie('home_page', 'friend', max_age=3)
+    return response
 
 
 @login_required()
 def edit_cost_endpoint(request):
     cost_controller.costStatusUpdate(request.POST)
-    return redirect("home_view")
+    response = HttpResponseRedirect(reverse("home_view"))
+    response.set_cookie('home_page', 'cost', max_age=3)
+    response.set_cookie('trip_id', f'{request.POST['trip_id']}', max_age=3)
+    return response
 
 
 @login_required()
 def edit_account_endpoint(request):
     registration_controller.update_account(request.session.get('user_id'), request.POST)
-    return redirect("home_view")
+    response = HttpResponseRedirect(reverse("home_view"))
+    response.set_cookie('home_page', 'account', max_age=3)
+    return response
 
 
 @login_required
@@ -84,7 +93,9 @@ def invite_friend_view(request):
     menu = {"current_page": 'Invite friend'}
     if request.method == 'POST':
         registration_controller.invite_user(request.session.get('user_id'), request.POST)
-        return redirect("home_view")
+        response = HttpResponseRedirect(reverse("home_view"))
+        response.set_cookie('home_page', 'friend', max_age=3)
+        return response
 
     return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
 
@@ -95,7 +106,11 @@ def add_cost_view(request, trip_id):
     user_id = request.session.get('user_id')
     if request.method == 'POST':
         cost_controller.add_cost(user_id, trip_id, request.POST)
-        return redirect("home_view")
+        response = HttpResponseRedirect(reverse("home_view"))
+        response.set_cookie('home_page', 'cost', max_age=3)
+        response.set_cookie('trip_id', f'{trip_id}', max_age=3)
+        return response
+
     trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
     trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_squad))
     return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': trip_squad, 'background': background})

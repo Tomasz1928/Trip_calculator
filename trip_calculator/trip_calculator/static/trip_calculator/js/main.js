@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-
     const tripButton = document.getElementById("main_trip");
     const friendButton = document.getElementById("main_friend");
     const costButtons = document.querySelectorAll('[id^="main-cost-button-"]');
@@ -10,33 +9,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const costDetails = document.querySelectorAll('[id^="main-cost-tabel-"]');
     const accountDetail = document.getElementById("main-account-table");
 
-    tripButton.addEventListener('click', () => {
-        const list = flatten([friendDetail, ...costDetails, accountDetail]);
-        showTabel(tripDetail, list);
-    });
+    const actions = {
+        'friend': () => showTabel(friendDetail, flatten([tripDetail, ...costDetails, accountDetail])),
+        'trip': () => showTabel(tripDetail, flatten([friendDetail, ...costDetails, accountDetail])),
+        'account': () => showTabel(accountDetail, flatten([tripDetail, friendDetail, ...costDetails])),
+        'hideAll': () => hideAll(flatten([tripDetail, friendDetail, ...costDetails, accountDetail])),
+        'cost': (id = getCookie('trip_id')) => {
+            actions.hideAll()
+            const show = document.getElementById(`main-cost-tabel-${id}`);
+            show.style.display = 'block';
+        }
+    }
 
-    friendButton.addEventListener('click', () => {
-        const list = flatten([tripDetail, ...costDetails, accountDetail]);
-        showTabel(friendDetail, list);
-    });
-
-    accountButton.addEventListener('click', () => {
-        const list = flatten([tripDetail, friendDetail, ...costDetails]);
-        showTabel(accountDetail, list);
-    });
-
+    tripButton.addEventListener('click', () => actions.trip());
+    friendButton.addEventListener('click', () => actions.friend());
+    accountButton.addEventListener('click', () => actions.account());
     costButtons.forEach(element => {
         element.addEventListener('click', () => {
             const id = element.dataset.id;
-            const list = flatten([tripDetail, friendDetail, ...costDetails, accountDetail]);
-            hideAll(list);
-            const show = document.getElementById(`main-cost-tabel-${id}`);
-            show.style.display = 'block';
+            actions.cost(id);
         });
-    });
+    })
+
+
 
     function showTabel(toShow, toHide) {
-        console.log(toHide);
         toShow.style.display = 'block';
         toHide.forEach(element => element.style.display = 'none');
     }
@@ -49,6 +46,19 @@ document.addEventListener("DOMContentLoaded", () => {
         return arr.reduce((acc, val) => acc.concat(val), []);
     }
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+
+    function openUpdatedTab() {
+        const cookieValue = getCookie('home_page');
+        if (cookieValue && actions[cookieValue]) {
+            actions[cookieValue]();
+        }
+    }
 
     document.querySelectorAll("[id^='edit-friend-button-']").forEach(button => {
         button.addEventListener('click', (event) => {
@@ -95,19 +105,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-        document.querySelectorAll("[id^='edit-cost-button-']").forEach(button => {
+    document.querySelectorAll("[id^='edit-cost-button-']").forEach(button => {
         button.addEventListener('click', (event) => {
             const inputCostId = document.getElementById('cost-edit-modal-input-cost-id');
             const inputUserId = document.getElementById('cost-edit-modal-input-user_id');
+            const inputTripId = document.getElementById('cost-edit-modal-input-trip-id');
             const textWithUsername = document.getElementById('cost-edit-modal-text');
             const costId = event.currentTarget.getAttribute('data-value-cost-id');
             const friendId = event.currentTarget.getAttribute('data-value-frieng-id');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
             const friendName = event.currentTarget.getAttribute('data-value-friend-name');
+
 
             const text = `Did friend: ${friendName} return your money?`
             textWithUsername.textContent = text
             inputCostId.setAttribute('value', costId)
             inputUserId.setAttribute('value', friendId)
+            inputTripId.setAttribute('value', tripId)
         });
     })
+
+    openUpdatedTab()
 });
