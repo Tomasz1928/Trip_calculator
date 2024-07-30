@@ -3,12 +3,13 @@
     <table class="table table-light table-sm text-start small">
         <thead>
         <tr>
-            <th scope="col">Cost name</th>
+            <th scope="col">Title</th>
             <th scope="col">Payer</th>
             <th scope="col">Split</th>
             <th scope="col">Cost</th>
-            <th scope="col">Cost per person</th>
+            <th scope="col">Person cost</th>
             <th scope="col">Return</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody class="table-group-divider">
@@ -31,18 +32,24 @@
 
                             {% if cost.who_pay.was_you %}
 
-                            <button type="button" class="btn p-0" data-bs-toggle="modal" id="edit-cost-button-{{ data.user_id }}"
-                                    data-bs-target="#cost-edit-modal" data-value-frieng-id="{{ data.user_id }}"
-                                    data-value-cost-id="{{ cost.cost_id }}" data-value-friend-name="{{ data.firstname }}",
+                            <button type="button" class="btn p-0" data-bs-toggle="modal"
+                                    id="edit-cost-split-button-{{ data.user_id }}"
+                                    data-bs-target="#cost-status-modal" data-value-frieng-id="{{ data.user_id }}"
+                                    data-value-cost-id="{{ cost.cost_id }}"
+                                    data-value-friend-name="{{ data.firstname }}"
                                     data-value-trip-id="{{ trip.id }}">
-                                <i class="bi bi-cash-coin me-1"
-                               style="color:{% if data.payment %}green {% else %}red {% endif %};"></i> {{ data.firstname }}
-                            </button>
 
+                                <i class="bi bi-cash-coin me-1"
+
+                                   style="color:{% if data.payment %}green {% else %}red {% endif %};"></i>
+                                <i class="bi bi-pencil-square" style="color:#6F42C1"></i>
+                                {{ data.firstname }}
+                            </button>
 
                             {% else %}
                             <i class="bi bi-cash-coin me-1"
-                               style="color:{% if data.payment %}green {% else %}red {% endif %};"></i> {{ data.firstname }}
+                               style="color:{% if data.payment %}green {% else %}red {% endif %};"></i>
+                            {{ data.firstname }}
                             {% endif %}
 
                         </li>
@@ -50,18 +57,44 @@
                     </ul>
                 </div>
             </td>
-            <td scope="col">{{ cost.cost }}</td>
+            <td scope="col">
+                {% if cost.who_pay.was_you %}
+                <a href="#"
+                   class="d-flex align-items-center p-0" data-bs-toggle="modal"
+                   id="edit-cost-value-button-{{ cost.cost_id }}" data-bs-target="#cost-update-modal"
+                   data-value-cost-id="{{ cost.cost_id }}" data-value-cost-name="{{ cost.name }}"
+                   data-value-trip-id="{{ trip.id }}">
+                    {{ cost.cost }}
+                    <i class="bi bi-pencil-square ms-1" style="color:#6F42C1"></i>
+                </a>
+                {% else %}
+                {{ cost.cost }}
+                {% endif %}
+
+            </td>
             <td scope="col">{{ cost.unit_cost }}</td>
             <td scope="col"
                 style="color:{% if cost.return == '0.00' or cost.return == '0' %}black{% elif cost.who_pay.was_you %}green{% else %}red{% endif %};">
                 {{ cost.return }}
+            </td>
+            <td scope="col">
+                {% if cost.who_pay.was_you %}
+                <a href="#"
+                   class="d-flex align-items-center text-decoration-none p-0" data-bs-toggle="modal"
+                   id="edit-cost-remove-button-{{ cost.cost_id }}" data-bs-target="#cost-remove-modal"
+                   data-value-cost-id="{{ cost.cost_id }}" data-value-cost-name="{{ cost.name }}"
+                   data-value-trip-id="{{ trip.id }}">
+                    <i class="bi bi-trash ms-1" style="color:red"></i>
+                </a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}
 
         </tbody>
         <caption class="pt-2">
-            <a href="{% url 'add_cost_view' trip_id=trip.id %}" class="btn btn-success bi btn-sm footer-tabel-button"> Add
+            <a href="{% url 'add_cost_view' trip_id=trip.id %}" class="btn btn-success bi btn-sm footer-tabel-button">
+                Add
                 Cost</a>
             <p class="h6">Person sum: {{ trip.totalCost }}</p>
             <p class="h6">Balance: {% if trip.balance.positive %}+ {% else %}- {% endif %}{{ trip.balance.amount }}</p>

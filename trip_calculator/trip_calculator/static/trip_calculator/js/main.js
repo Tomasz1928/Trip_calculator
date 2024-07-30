@@ -105,12 +105,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    document.querySelectorAll("[id^='edit-cost-button-']").forEach(button => {
+    document.querySelectorAll("[id^='edit-cost-split-button-']").forEach(button => {
         button.addEventListener('click', (event) => {
-            const inputCostId = document.getElementById('cost-edit-modal-input-cost-id');
-            const inputUserId = document.getElementById('cost-edit-modal-input-user_id');
-            const inputTripId = document.getElementById('cost-edit-modal-input-trip-id');
-            const textWithUsername = document.getElementById('cost-edit-modal-text');
+            const inputCostId = document.getElementById('cost-status-modal-input-cost-id');
+            const inputUserId = document.getElementById('cost-status-modal-input-user_id');
+            const inputTripId = document.getElementById('cost-status-modal-input-trip-id');
+            const textArea = document.getElementById('cost-status-modal-text');
             const costId = event.currentTarget.getAttribute('data-value-cost-id');
             const friendId = event.currentTarget.getAttribute('data-value-frieng-id');
             const tripId = event.currentTarget.getAttribute('data-value-trip-id');
@@ -118,9 +118,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             const text = `Did friend: ${friendName} return your money?`
-            textWithUsername.textContent = text
+            textArea.textContent = text
             inputCostId.setAttribute('value', costId)
             inputUserId.setAttribute('value', friendId)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+    document.querySelectorAll("[id^='edit-cost-remove-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputCostId = document.getElementById('cost-remove-modal-input-cost-id');
+            const inputTripId = document.getElementById('cost-remove-modal-input-trip-id');
+            const textArea = document.getElementById('cost-remove-modal-text');
+            const costId = event.currentTarget.getAttribute('data-value-cost-id');
+            const costName = event.currentTarget.getAttribute('data-value-cost-name');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+
+
+            const text = `You want remove Cost: ${costName} ?`
+            textArea.textContent = text
+            inputCostId.setAttribute('value', costId)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+    document.querySelectorAll("[id^='edit-cost-value-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputCostId = document.getElementById('cost-update-modal-input-cost-id');
+            const inputValue = document.getElementById('cost-update-modal-input-value');
+            const inputTripId = document.getElementById('cost-update-modal-input-trip-id');
+            const textArea = document.getElementById('cost-update-modal-text');
+            const costId = event.currentTarget.getAttribute('data-value-cost-id');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const costName = event.currentTarget.getAttribute('data-value-cost-name');
+
+
+            const text = `Input new cost value for: ${costName}`
+            textArea.textContent = text
+            inputCostId.setAttribute('value', costId)
+            inputValue.value = null
             inputTripId.setAttribute('value', tripId)
         });
     })

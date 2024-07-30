@@ -4,6 +4,11 @@
     height: 100vh
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+    }
+
 .modal-button {
             display: flex;
             align-items: center;

@@ -61,7 +61,7 @@ def edit_friend_endpoint(request):
 
 @login_required()
 def edit_cost_endpoint(request):
-    cost_controller.costStatusUpdate(request.POST)
+    cost_controller.manage_cost_action(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'cost', max_age=3)
     response.set_cookie('trip_id', f'{request.POST['trip_id']}', max_age=3)
