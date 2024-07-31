@@ -1,6 +1,12 @@
-<div id="main-friend-table" style="display: none">
-    <table class="table table-light table-sm text-start small">
-        <thead>
+<div class="table-container" id="main-friend-table" style="display: none">
+    <table class="table table-sm text-start small table-borderless rounded-2">
+        <thead class="border-bottom border-info">
+        <tr>
+            <th colspan="5">
+                Friend
+             <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi btn-sm table-button ms-2">Add friend</a>
+            </th>
+        </tr>
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Lastname</th>
@@ -10,7 +16,7 @@
         </tr>
         </thead>
 
-        <tbody class="table-group-divider">
+        <tbody>
         {% for friend in friends_list %}
         <tr>
             <td scope="col">{{ friend.name }}</td>
@@ -47,9 +53,6 @@
         </tr>
         {% endfor %}
         </tbody>
-        <caption class="pt-2">
-            <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi btn-sm footer-tabel-button">Add friend</a>
-        </caption>
     </table>
 </div>
 {% include 'trip_calculator/home_table/friend_edit_modal.html' %}

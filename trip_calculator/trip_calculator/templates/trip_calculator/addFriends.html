@@ -68,9 +68,17 @@
             <div class="col-md-8">
                 <div class="container-table mb-3 border border-dark-subtle rounded" style=" margin-top: 0">
                     <div class="row justify-content-center p-2">
-                        <div class="table-responsive">
-                            <table class="table table-light table-sm">
-                                <thead>
+                        <div class="table-responsive table-container">
+                            <table class="table table-sm text-start small table-borderless rounded-2">
+                                <thead class="border-bottom border-info">
+                                <tr>
+                                    <th colspan="4">
+                                        <button type="button" class="btn btn-success bi btn-sm table-button"
+                                                id="send-button" style="display: none;" disabled>
+                                            Invite friends
+                                        </button>
+                                    </th>
+                                </tr>
                                 <tr>
                                     <th scope="col">Firstname</th>
                                     <th scope="col">Lastname</th>
@@ -79,12 +87,6 @@
                                 </tr>
                                 </thead>
                                 <tbody class="table-group-divider" id="table-body"></tbody>
-                                <caption class="pt-2">
-                                    <button type="button" class="btn btn-success bi footer-tabel-button"
-                                            id="send-button" style="display: none;" disabled>
-                                        Invite friends
-                                    </button>
-                                </caption>
                             </table>
                         </div>
                     </div>

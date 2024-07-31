@@ -1,6 +1,12 @@
-<div id="main-trip-table" style="display: block">
-    <table class="table table-light table-sm text-start small">
-        <thead>
+<div class="table-container" id="main-trip-table" style="display: block">
+<table class="table table-sm text-start small table-borderless rounded-2">
+        <thead class="border-bottom border-info">
+        <tr>
+            <th colspan="4">
+                Trip
+             <a href="{% url 'create_trip_view' %}" class="btn btn-success bi btn-sm table-button ms-2">Edit Trip</a>
+            </th>
+        </tr>
         <tr>
             <th scope="col">Name</th>
             <th scope="col">Description</th>
@@ -9,7 +15,7 @@
         </tr>
         </thead>
 
-        <tbody class="table-group-divider">
+        <tbody>
         {% for trip in trip_list %}
         <tr>
             <td scope="col">{{ trip.name }}</td>
@@ -33,8 +39,5 @@
         </tr>
         {% endfor %}
         </tbody>
-        <caption class="pt-2">
-            <a href="{% url 'create_trip_view' %}" class="btn btn-primary bi btn-sm footer-tabel-button">Edit Trip</a>
-        </caption>
     </table>
 </div>

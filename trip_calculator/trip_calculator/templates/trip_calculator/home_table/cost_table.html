@@ -1,9 +1,17 @@
 {% for trip in cost.for_trip %}
-<div class="table-container" id="main-cost-tabel-{{ trip.id }}" style="display: none">
-    <div class="table-wrapper">
-    <table class="table table-light table-sm text-start small">
 
-        <thead class="table-primary">
+
+<div class="table-container" id="main-cost-tabel-{{ trip.id }}" style="display: none">
+    <table class="table table-sm text-start small table-borderless rounded-2">
+        <thead class="border-bottom border-info">
+        <tr>
+            <th colspan="7">
+                {{ trip.name }}
+             <a href="{% url 'add_cost_view' trip_id=trip.id %}" class="btn btn-success bi btn-sm table-button ms-2">
+                Add Cost</a>
+            </th>
+        </tr>
+
         <tr>
             <th scope="col">Title</th>
             <th scope="col">Payer</th>
@@ -14,7 +22,7 @@
             <th scope="col"></th>
         </tr>
         </thead>
-        <tbody class="table-group-divider table-body">
+        <tbody >
 
         {% for cost in trip.costs %}
         <tr>
@@ -25,7 +33,7 @@
                    id="edit-cost-title-button-{{ cost.cost_id }}" data-bs-target="#cost-title-modal"
                    data-value-cost-id="{{ cost.cost_id }}" data-value-cost-title="{{ cost.name }}"
                    data-value-trip-id="{{ trip.id }}">
-                   {{ cost.name }}
+                    {{ cost.name }}
                     <i class="bi bi-pencil-square ms-1" style="color:#6F42C1"></i>
                 </a>
                 {% else %}
@@ -34,10 +42,10 @@
             </td>
 
 
-
             <td scope="col">
-                <a href="#" data-bs-toggle="tooltip" data-bs-title="{{ cost.who_pay.name }} {{ cost.who_pay.lastname }}">
-                {{ cost.who_pay.name }}
+                <a href="#" data-bs-toggle="tooltip"
+                   data-bs-title="{{ cost.who_pay.name }} {{ cost.who_pay.lastname }}">
+                    {{ cost.who_pay.name }}
                 </a>
             </td>
 
@@ -67,15 +75,16 @@
                                 <i class="bi bi-pencil-square" style="color:#6F42C1"></i>
                             </button>
 
-                            <a href="#" data-bs-toggle="tooltip" data-bs-title="{{ data.firstname }} {{ data.lastname }}">
+                            <a href="#" data-bs-toggle="tooltip"
+                               data-bs-title="{{ data.firstname }} {{ data.lastname }}">
                                 {{ data.firstname }}
                             </a>
 
                             {% else %}
                             <button type="button" class="btn p-0"
                                     data-bs-toggle="tooltip" data-bs-title="{{ data.firstname }} {{ data.lastname }}">
-                               <i class="bi bi-cash-coin me-1"
-                               style="color:{% if data.payment %}green {% else %}red {% endif %};"></i>
+                                <i class="bi bi-cash-coin me-1"
+                                   style="color:{% if data.payment %}green {% else %}red {% endif %};"></i>
                                 {{ data.firstname }}
                             </button>
                             {% endif %}
@@ -120,15 +129,8 @@
         {% endfor %}
 
         </tbody>
-        <caption class="pt-2">
-            <a href="{% url 'add_cost_view' trip_id=trip.id %}" class="btn btn-success bi btn-sm footer-tabel-button">
-                Add
-                Cost</a>
-            <p class="h6">Person cost sum: {{ trip.self_cost }}</p>
-            <p class="h6">Balance: {{ trip.balance }}</p>
-        </caption>
     </table>
-        </div>
 </div>
+
 {% endfor %}
 {% include 'trip_calculator/home_table/cost_edit_modal.html' %}

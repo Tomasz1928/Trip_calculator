@@ -1,6 +1,14 @@
-<div id="main-account-table" style="display: none">
-    <table class="table table-light table-sm text-start small">
-        <thead>
+<div class="table-container" id="main-account-table" style="display: none">
+    <table class="table table-sm text-start small table-borderless rounded-2">
+        <thead class="border-bottom border-info">
+        <tr>
+            <th colspan="4">
+                Account
+            <button type="button" class="btn btn-primary btn-sm table-button ms-2" data-bs-toggle="modal" id="edit-account-button"
+                                    data-bs-target="#account-common-edit-modal">Edit account</button>
+            </th>
+        </tr>
+
         <tr>
             <th scope="col">Firstname</th>
             <th scope="col">Lastname</th>
@@ -8,7 +16,7 @@
             <th scope="col">Created</th>
         </tr>
         </thead>
-        <tbody class="table-group-divider">
+        <tbody>
         <tr>
             <td scope="col">{{ user.name }}</td>
             <td scope="col">{{ user.lastname }}</td>
@@ -16,10 +24,6 @@
             <td scope="col">{{ user.added }}</td>
         </tr>
         </tbody>
-        <caption class="pt-2">
-           <button type="button" class="btn btn-primary btn-sm footer-tabel-button" data-bs-toggle="modal" id="edit-account-button"
-                                    data-bs-target="#account-common-edit-modal">Edit account</button>
-        </caption>
     </table>
 </div>
 {% include 'trip_calculator/home_table/account_edit_modal.html' %}

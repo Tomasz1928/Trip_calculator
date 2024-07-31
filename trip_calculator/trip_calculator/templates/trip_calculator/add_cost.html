@@ -45,8 +45,8 @@
 
                     <div class="row mb-2 ">
                         <div class="col-sm-12">
-                             <input type="number" class="form-control" id="cost-amount-input" name="amount" step="0.01"
-                               min="0" placeholder="125.55">
+                            <input type="number" class="form-control" id="cost-amount-input" name="amount" step="0.01"
+                                   min="0" placeholder="125.55">
                         </div>
                     </div>
 
@@ -92,9 +92,17 @@
                 <div class="container-table mb-3 border border-dark-subtle rounded"
                      style=" margin-top: 0; min-height: 250px;">
                     <div class="row justify-content-center p-2">
-                        <div class="table-responsive">
-                            <table class="table table-light table-sm">
-                                <thead>
+                        <div class="table-responsive table-container">
+                            <table class="table table-sm text-start small table-borderless rounded-2">
+                                <thead class="border-bottom border-info">
+                                <tr>
+                                    <th colspan="4">
+                                        <button type="button" class="btn btn-success bi btn-sm table-button"
+                                                id="send-button" style="display: none;" disabled>
+                                            Add cost
+                                        </button>
+                                    </th>
+                                </tr>
                                 <tr>
                                     <th scope="col">Title</th>
                                     <th scope="col">Cost</th>
@@ -103,12 +111,6 @@
                                 </tr>
                                 </thead>
                                 <tbody class="table-group-divider" id="table-body"></tbody>
-                                <caption class="pt-2">
-                                    <button type="button" class="btn btn-success bi footer-tabel-button btn-sm"
-                                            id="send-button" style="display: none;" disabled>
-                                        Add cost
-                                    </button>
-                                </caption>
                             </table>
                         </div>
                     </div>

@@ -7,27 +7,44 @@
 a {
     text-decoration: none;
     color: inherit;
-    }
+}
+
+.table-container{
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.table {
+    background: rgba(224, 255, 255, 0.5);
+    --bs-table-bg: rgba(255, 255, 255, 0)
+}
+
+.table thead {
+    position: sticky;
+    top: 0;
+    background: #f4ffff;
+    z-index: 1;
+}
 
 .modal-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            text-align: center;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
 
 .background-dropdown-color {
     background-color: rgba(255, 255, 234, 1);
 }
 
-.transparent-label::after{
+.transparent-label::after {
     background-color: transparent !important;
     border: none;
 }
 
 .container-main {
-background-color: rgba(224, 255, 255, 0.5);
+    background-color: rgba(224, 255, 255, 0.5);
     margin-top: 20px;
 }
 
@@ -37,22 +54,39 @@ background-color: rgba(224, 255, 255, 0.5);
     border-radius: 10px;
 }
 
-    .table-sm th,
-    .table-sm td{
-        text-align: left;
-        max-width: 250px;
-    }
+.table-sm th,
+.table-sm td {
+    text-align: left;
+    max-width: 250px;
+}
 
-.dropdown-list{
+.dropdown-list {
     width: 200px
-    }
+}
 
 @media (max-width: 576px) {
 
-.table-container {
-            max-height: 400px;
-            overflow-y: auto;
-        }
+    .table-container{
+        min-height: 275px;
+        max-height: 275px;
+        overflow-y: auto;
+    }
+
+    .table {
+        background: rgba(224, 255, 255, 0.5);
+        --bs-table-bg: rgba(255, 255, 255, 0);
+    }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        background: #f4ffff;
+        z-index: 1;
+    }
+
+        .table tbody {
+    }
+
 
     .table-responsive {
         overflow-x: auto;
@@ -64,34 +98,33 @@ background-color: rgba(224, 255, 255, 0.5);
         font-size: 0.5rem;
     }
 
-    .dropdown-list li{
-    padding: 0rem;
-    font-size: 0.65rem;
-    display: flex;
-    align-items: center;
+    .dropdown-list li {
+        padding: 0rem;
+        font-size: 0.65rem;
+        align-items: center;
     }
 
-    .dropdown-list{
-    width: 175px
+    .dropdown-list {
+        width: 175px
     }
 
-    .table-button{
-    padding: 0.1rem 0.2rem;
-    font-size: 0.5rem;
-    line-height: 1;
+    .table-button {
+        padding: 0.1rem 0.2rem;
+        font-size: 0.5rem;
+        line-height: 1;
     }
 
     .footer-tabel-button {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.65rem;
-    line-height: 1;
-    margin-right: 8px
+        padding: 0.6rem 0.4rem;
+        font-size: 0.65rem;
+        line-height: 1;
+        margin-right: 8px
     }
 
     .small-button {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.65rem;
-    line-height: 1;
-    margin-right: 8px
+        padding: 0.6rem 0.4rem;
+        font-size: 0.65rem;
+        line-height: 1;
+        margin-right: 8px
     }
 }
