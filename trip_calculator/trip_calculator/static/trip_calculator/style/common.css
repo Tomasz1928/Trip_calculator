@@ -66,6 +66,10 @@ a {
 
 @media (max-width: 576px) {
 
+    .navbar-logo{
+    font-size: 0.75rem;
+    }
+
     .table-container{
         min-height: 275px;
         max-height: 275px;
@@ -82,9 +86,6 @@ a {
         top: 0;
         background: #f4ffff;
         z-index: 1;
-    }
-
-        .table tbody {
     }
 
 
