@@ -1,5 +1,6 @@
 from django.db import transaction
 from trip_calculator.models import Cost, Splited, User
+from collections import defaultdict
 import ast
 
 
@@ -13,7 +14,8 @@ class CostController:
         with transaction.atomic():
             new_cost = Cost(trip_id=trip_id, payer_id=payer_id, cost_name=name, value=value)
             new_cost.save()
-            splits = [Splited(cost=new_cost, user_id=user_id, payment=(payer_id == user_id)) for user_id in split_user_ids]
+            splits = [Splited(cost=new_cost, user_id=user_id, payment=(payer_id == user_id)) for user_id in
+                      split_user_ids]
             Splited.objects.bulk_create(splits)
 
     def remove_cost(self, cost_id):
@@ -30,7 +32,7 @@ class CostController:
         cost.cost_name = title
         cost.save()
 
-    def _get_user_details(self, user_ids):
+    def get_user_details(self, user_ids):
         users = User.objects.filter(user_id__in=user_ids)
         return {
             user.user_id: {'firstname': user.firstname, 'lastname': user.lastname, 'user_id': user.user_id}
@@ -52,7 +54,7 @@ class CostController:
                  'lastname': User.objects.get_user_by_id(detail['user_id']).lastname}
                 for detail in split_details
             ]
-            payer = self._get_user_details([cost.payer.user_id]).get(cost.payer.user_id)
+            payer = self.get_user_details([cost.payer.user_id]).get(cost.payer.user_id)
             cost_details.append({'split': split_users, 'payer': payer, 'cost_name': cost.cost_name, 'value': cost.value,
                                  'cost_id': cost.cost_id})
         return cost_details
@@ -131,8 +133,9 @@ def get_all_cost_details(user_id):
                 cost = {
                     'cost_id': cost_data['cost_id'], 'name': cost_data['cost_name'],
                     'who_pay': {'name': cost_data['payer']['firstname'], 'lastname': cost_data['payer']['lastname'],
-                                'was_you': data["payer_was_you"]}, 'cost': str(cost_data['value']),
-                    'split_by': cost_data['split'], 'unit_cost': str(data['unit_cost']),
+                                'was_you': data["payer_was_you"], 'payer_id': cost_data['payer']['user_id']},
+                    'cost': str(cost_data['value']), 'split_by': cost_data['split'],
+                    'unit_cost': str(data['unit_cost']),
                     'return': str(data['to_return']), 'balance': data['balance']
                 }
                 costs.append(cost)
@@ -163,6 +166,96 @@ def calculate_to_return(cost_data, user_id):
                 'balance': 0 if user_data['payment'] else (-unit_cost)}
 
 
+def get_cost_overall(user_id):
+    all_cost = get_all_cost_details(user_id)
+    for trip in all_cost["for_trip"]:
+        return_table = []
+
+        for cost in trip['costs']:
+            payer = cost['who_pay']['payer_id']
+            return_to_user_id = []
+
+            for splited in cost['split_by']:
+                if payer != splited['user_id'] and splited['payment'] == False:
+                    return_to_user_id.append({'user_id': splited['user_id'], 'cost': float(cost['unit_cost'])})
+
+            if len(return_to_user_id) > 0:
+                return_table.append({'user_id': payer, 'return_from': return_to_user_id})
+
+        reduce_payments = aggregate_and_reduce_payments(return_table)
+        filtered_data = adjust_payments(reduce_payments, user_id)
+        data = extend_data_by_name_and_lastname(filtered_data)
+        trip['overall_cost'] = data
+    return all_cost
 
 
+def aggregate_payments(data):
+    aggregated = defaultdict(lambda: defaultdict(float))
+
+    for entry in data:
+        payer_id = entry.get("user_id")
+        if payer_id is None:
+            continue
+
+        for return_from in entry.get("return_from", []):
+            return_user_id = return_from.get("user_id")
+            cost = return_from.get("cost", 0.0)
+
+            if return_user_id is not None:
+                aggregated[payer_id][return_user_id] += cost
+
+    return aggregated
+
+
+def calculate_final_balances(aggregated):
+    final_balances = defaultdict(float)
+
+    for payer_id, payees in aggregated.items():
+        for payee_id, amount in payees.items():
+            reciprocal_amount = aggregated.get(payee_id, {}).get(payer_id, 0.0)
+            net_amount = amount - reciprocal_amount
+
+            if net_amount > 0:
+                final_balances[(payer_id, payee_id)] += net_amount
+
+    return final_balances
+
+
+def aggregate_and_reduce_payments(data):
+    aggregated = aggregate_payments(data)
+    final_balances = calculate_final_balances(aggregated)
+
+    return [{'user_id': payer_id, "return_from": {'user_id': payee_id, 'value': round(amount, 2)}}
+            for (payer_id, payee_id), amount in final_balances.items() if amount > 0]
+
+
+def adjust_payments(data, target_user_id):
+    adjusted_data = []
+
+    for obj in data:
+        user_id = obj.get('user_id')
+        return_user_id = obj.get('return_from', {}).get('user_id')
+        value = obj.get('return_from', {}).get('value', 0.0)
+
+        if user_id == target_user_id and return_user_id != target_user_id:
+            adjusted_data.append({
+                'user_id': return_user_id, 'return_from': {'user_id': target_user_id, 'value': value,'positiv': False}})
+        elif return_user_id == target_user_id:
+            adjusted_data.append({
+                'user_id': user_id, 'return_from': {'user_id': return_user_id, 'value': value, 'positiv': True}})
+
+    return adjusted_data
+
+
+def extend_data_by_name_and_lastname(data):
+    extended_data = []
+    for new_data in data:
+        payer = CostController().get_user_details([new_data['user_id'], new_data['return_from']['user_id']])
+        new_data['firstname'] = payer[new_data['user_id']]['firstname']
+        new_data['lastname'] = payer[new_data['user_id']]['lastname']
+        new_data['return_from']['firstname'] = payer[new_data['return_from']['user_id']]['firstname']
+        new_data['return_from']['lastname'] = payer[new_data['return_from']['user_id']]['lastname']
+        extended_data.append(new_data)
+
+    return extended_data
 

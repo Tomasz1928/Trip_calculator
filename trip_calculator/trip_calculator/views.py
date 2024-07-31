@@ -123,8 +123,7 @@ def home_view(request):
     menu = {"current_page": f'Hello {user['name']} {user['lastname']}'}
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
-    costs = cost_controller.get_all_cost_details(user_id)
-
+    costs = cost_controller.get_cost_overall(user_id)
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

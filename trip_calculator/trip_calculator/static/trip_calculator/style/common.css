@@ -10,7 +10,7 @@ a {
 }
 
 .table-container{
-    max-height: 600px;
+    max-height: 400px;
     overflow-y: auto;
 }
 
@@ -58,6 +58,7 @@ a {
 .table-sm td {
     text-align: left;
     max-width: 250px;
+    padding: 0.6rem;
 }
 
 .dropdown-list {
@@ -71,8 +72,8 @@ a {
     }
 
     .table-container{
-        min-height: 275px;
-        max-height: 275px;
+        min-height: 190px;
+        max-height: 225px;
         overflow-y: auto;
     }
 
