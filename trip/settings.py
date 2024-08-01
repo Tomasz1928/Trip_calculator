@@ -30,7 +30,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 
 # ALLOWED_HOSTS = ['localhost', '192.168.1.110', '192.168.18.27', '127.0.0.0']\
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mailjet.com'  # Host SMTP dla Mailjet
