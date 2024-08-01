@@ -22,6 +22,10 @@ document.addEventListener("DOMContentLoaded", () => {
         trip_squad: document.getElementById('trip-overall-squad')
     }
 
+    const modal = document.querySelectorAll('#create-trip-no-friend').forEach(modal => {
+        new bootstrap.Modal(modal).show()
+    })
+
     document.querySelectorAll('.dropdown-menu').forEach(function (dropdown) {
         dropdown.addEventListener('click', function (e) {
             e.stopPropagation();

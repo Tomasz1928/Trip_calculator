@@ -117,6 +117,39 @@
 </main>
 </body>
 
+{% if person|length != 0 %}
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"
+     id="create-trip-no-friend">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Friend</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body ">
+                <p style="text-align: center">
+                    You have no friends.<br>
+                    If you want to create a trip with friends, please firstly add them.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+                                        aria-label="Close">Cancel
+                                </button>
+                                <a href="{% url 'invite_friend_view' %}" class="btn btn-success bi btn-sm">Add
+                                    friend</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
