@@ -52,6 +52,14 @@ def logout_endpoint(request):
 
 
 @login_required()
+def edit_trip_endpoint(request):
+    trip_controller.update_trip(request.session.get('user_id'), request.POST)
+    response = HttpResponseRedirect(reverse("home_view"))
+    response.set_cookie('home_page', 'trip', max_age=3)
+    return response
+
+
+@login_required()
 def edit_friend_endpoint(request):
     FriendController(request.session.get('user_id')).delete_friend(request.GET['friend_id'])
     response = HttpResponseRedirect(reverse("home_view"))
@@ -124,6 +132,9 @@ def home_view(request):
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
     costs = cost_controller.get_cost_overall(user_id)
+    print(trip)
+
+
 
     return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})

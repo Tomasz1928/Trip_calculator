@@ -26,6 +26,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Trip(models.Model):
     trip_id = models.AutoField(primary_key=True)
+    trip_owner = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     start = models.CharField(max_length=255)
     end = models.CharField(max_length=255)

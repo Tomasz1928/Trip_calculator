@@ -188,5 +188,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    document.querySelectorAll("[id^='edit-trip-title-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputTitle = document.getElementById('trip-title-modal-input-value');
+            const inputTripId = document.getElementById('trip-title-modal-input-trip-id');
+            const textArea = document.getElementById('trip-title-modal-text');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const tripTitle = event.currentTarget.getAttribute('data-value-trip-title');
+
+            const text = `Input new trip title`
+            textArea.textContent = text
+            inputTitle.value = null
+            inputTitle.setAttribute('placeholder', tripTitle)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+
+    document.querySelectorAll("[id^='edit-trip-description-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputDescription = document.getElementById('trip-description-modal-input-value');
+            const inputTripId = document.getElementById('trip-description-modal-input-trip-id');
+            const textArea = document.getElementById('trip-description-modal-text');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const tripDescription = event.currentTarget.getAttribute('data-value-trip-description');
+
+            const text = `Input new trip description`
+            textArea.textContent = text
+            inputDescription.value = null
+            inputDescription.setAttribute('placeholder', tripDescription)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+
+    document.querySelectorAll("[id^='edit-trip-remove-button-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputTripId = document.getElementById('trip-remove-modal-input-trip-id');
+            const textArea = document.getElementById('trip-remove-modal-text');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const tripTitle = event.currentTarget.getAttribute('data-value-trip-name');
+
+            const text = `Are You sure You want remove trip ${tripTitle}`
+            textArea.textContent = text
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+
     openUpdatedTab()
 });

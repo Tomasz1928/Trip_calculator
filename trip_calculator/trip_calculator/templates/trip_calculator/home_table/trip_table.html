@@ -2,7 +2,7 @@
 <table class="table table-sm text-start small table-borderless rounded-2">
         <thead class="border-bottom border-info">
         <tr>
-            <th colspan="4">
+            <th colspan="5">
                 Trip
              <a href="{% url 'create_trip_view' %}" class="btn btn-success bi btn-sm table-button ms-2">Add trip</a>
             </th>
@@ -12,14 +12,41 @@
             <th scope="col">Description</th>
             <th scope="col">Squad</th>
             <th scope="col">Cost</th>
+            <th scope="col"></th>
         </tr>
         </thead>
 
         <tbody>
         {% for trip in trip_list %}
         <tr>
-            <td scope="col">{{ trip.name }}</td>
-            <td scope="col">{{ trip.description }}</td>
+            <td scope="col">
+                 {% if trip.owner %}
+                    <a href="#"
+                       class="d-flex align-items-center p-0" data-bs-toggle="modal"
+                       id="edit-trip-title-button-{{ trip.trip_id }}" data-bs-target="#trip-title-modal"
+                       data-value-trip-title="{{ trip.name }}" data-value-trip-id="{{ trip.trip_id }}">
+                        {{ trip.name }}
+                        <i class="bi bi-pencil-square ms-1" style="color:#6F42C1"></i>
+                    </a>
+                    {% else %}
+                    {{ trip.name }}
+                    {% endif %}
+            </td>
+            <td scope="col">
+                {% if trip.owner %}
+                    <a href="#"
+                       class="d-flex align-items-center p-0" data-bs-toggle="modal"
+                       id="edit-trip-description-button-{{ trip.trip_id }}" data-bs-target="#trip-description-modal"
+                       data-value-trip-description="{{ trip.description }}" data-value-trip-id="{{ trip.trip_id }}">
+                        {{ trip.description }}
+                        <i class="bi bi-pencil-square ms-1" style="color:#6F42C1"></i>
+                    </a>
+                    {% else %}
+                    {{ trip.description }}
+                    {% endif %}
+            </td>
+
+
             <td scope="col">
                 <div class="dropdown">
                     <button class="btn btn-primary dropdown-toggle btn-sm table-button" type="button"
@@ -40,8 +67,22 @@
                 {{ value|floatformat:2 }}
                 {% endwith %}
             </td>
+
+            <td scope="col">
+                    {% if trip.owner %}
+                    <a href="#"
+                       class="d-flex" data-bs-toggle="modal"
+                       id="edit-trip-remove-button-{{ trip.trip_id }}" data-bs-target="#trip-remove-modal"
+                       data-value-trip-name="{{ trip.name }}" data-value-trip-id="{{ trip.trip_id }}">
+                        <i class="bi bi-trash ms-1" style="color:red"></i>
+                    </a>
+                    {% endif %}
+                </td>
+
+
         </tr>
         {% endfor %}
         </tbody>
     </table>
 </div>
+{% include 'trip_calculator/home_table/trip_edit_modal.html' %}

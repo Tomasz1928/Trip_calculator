@@ -1,0 +1,152 @@
+<div class="modal fade" id="trip-remove-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Remove trip</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <form action="{% url 'edit_trip_endpoint' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="delete" value="true">
+                            <input type="hidden" id="trip-remove-modal-input-trip-id" name="trip_id" value="">
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-12 text-center">
+                                    <div class="form-floating">
+                                        <p class="h5 fs-5 fs-md-4" id="trip-remove-modal-text"></p>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close">Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="trip-title-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Update trip name</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <form action="{% url 'edit_trip_endpoint' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="trip-title-modal-input-trip-id" name="trip_id" value="">
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-12 text-center">
+                                    <div class="form-floating">
+                                        <p class="h5 fs-5 fs-md-4" id="trip-title-modal-text"></p>
+
+                                        <div class="row mb-2 mt-2">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control small-input"
+                                                       name="name" id="trip-title-modal-input-value">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close">Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="trip-description-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Update trip description</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <form action="{% url 'edit_trip_endpoint' %}" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="trip-description-modal-input-trip-id" name="trip_id" value="">
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-12 text-center">
+                                    <div class="form-floating">
+                                        <p class="h5 fs-5 fs-md-4" id="trip-description-modal-text"></p>
+
+                                        <div class="row mb-2 mt-2">
+                                            <div class="col-sm-12">
+                                                <input type="text" class="form-control small-input"
+                                                       name="description" id="trip-description-modal-input-value">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="container">
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                                <button type="button" class="btn btn-secondary btn-sm"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close">Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
