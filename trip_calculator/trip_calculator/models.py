@@ -42,12 +42,6 @@ class UserTrip(models.Model):
         unique_together = ('trip', 'user')
 
 
-class Invitation(models.Model):
-    email = models.EmailField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    active = models.BooleanField(default=False)
-
-
 class Cost(models.Model):
     cost_id = models.AutoField(primary_key=True)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
