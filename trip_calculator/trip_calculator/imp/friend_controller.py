@@ -17,7 +17,7 @@ class FriendController:
 
     def add_friend(self, friend_id):
         self._set_friend_id(friend_id)
-        if self._check_friend_not_exists():
+        if self._check_friend_not_exists() and friend_id != self.user_id:
             with transaction.atomic():
                 Friend.objects.create(user_id=self.user_id, friend_id=self.friend_id)
                 Friend.objects.create(user_id=self.friend_id, friend_id=self.user_id)

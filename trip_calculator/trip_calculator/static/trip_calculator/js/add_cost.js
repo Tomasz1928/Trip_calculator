@@ -3,11 +3,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("send-button");
     const inputs = document.querySelectorAll('#cost-amount-input, #cost-title-input');
     const inputCheckbox = document.querySelectorAll('#split-cost-checkbox input[type="checkbox"]')
+    const includeMeCheckbox = document.getElementById("cost-split-checkbox");
 
     const tableBody = document.getElementById("table-body");
     const formDiv = document.getElementById('form_content')
     const crfsToken = document.querySelector('[name="csrfmiddlewaretoken"]').value;
 
+
+    includeMeCheckbox.addEventListener('change', checkInputs);
     inputCheckbox.forEach(input => input.addEventListener('change', checkInputs));
     inputs.forEach(input => input.addEventListener('input', checkInputs));
     addCost.addEventListener("click", addElement);
@@ -20,7 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function checkInputs() {
         const allFilled = [...inputs].every(input => input.value.trim() !== "");
-        addCost.disabled = !allFilled;
+        const anyCheckboxChecked = [...inputCheckbox].some(checkbox => checkbox.checked);
+
+        if (includeMeCheckbox.checked) {
+            addCost.disabled = !allFilled;
+        } else {
+            addCost.disabled = !(allFilled && anyCheckboxChecked);
+        }
     }
 
     function checkTableData() {
@@ -37,8 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
             input.value = '';
         });
 
+        data['includeMe'] = includeMeCheckbox.checked ? true : false
         const splitList = []
-
 
         inputsCheckBox.forEach(checkbox => {
             const label = document.querySelector(`label[for="${checkbox.id}"]`)
@@ -103,15 +112,20 @@ document.addEventListener("DOMContentLoaded", () => {
         const newTableRow = document.createElement('tr');
         const splitRow = data.split.length > 0 ? createDropdown(data.split) : "-"
 
+        let includeMe = `${data['includeMe']}`
+        includeMe = includeMe.charAt(0).toUpperCase() + includeMe.slice(1);
+
         newTableRow.append(
             createTableCell(data.title, 'title'),
             createTableCell(data.amount, 'amount'),
-            createTableCell(splitRow, 'split')
+            createTableCell(splitRow, 'split'),
+            createTableCell(includeMe, 'includeMe')
         );
+
 
         const colButton = document.createElement('td');
         const button = document.createElement('a');
-        button.setAttribute('href','#')
+        button.setAttribute('href', '#')
         button.className = 'd-flex';
         const icon = document.createElement('i');
         icon.className = 'bi bi-trash ms-1';
@@ -133,10 +147,11 @@ document.addEventListener("DOMContentLoaded", () => {
         tableBody.querySelectorAll('tr').forEach(row => {
             const title = row.querySelector('[data-title]').textContent;
             const amount = row.querySelector('[data-amount]').textContent;
+            const include = row.querySelector('[data-includeMe]').textContent.trim() === "True";
             const split = []
             row.querySelectorAll('[data-split] li').forEach(li => { split.push(li.getAttribute('data-value')) })
 
-            data.push({ title: title, amount: amount, split: split })
+            data.push({ title: title, amount: amount, split: split, include:`${include}` })
         });
 
         const inputs = [
@@ -158,8 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
         formDiv.append(form)
         form.submit()
         formDiv.innerHTML = ''
-
-
     });
 
     checkTableData();

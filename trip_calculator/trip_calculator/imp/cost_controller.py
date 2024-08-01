@@ -73,7 +73,11 @@ def add_cost(user_id, trip_id, data):
     costs = ast.literal_eval(data['cost'])
     cost_controller = CostController()
     for cost in costs:
-        split_user_ids = [user_id] + [int(x) for x in cost['split']]
+        if cost['include'] == 'true':
+            split_user_ids = [user_id] + [int(x) for x in cost['split']]
+        else:
+            split_user_ids = [int(x) for x in cost['split']]
+
         cost_controller.add_cost(user_id, trip_id, cost['title'], cost['amount'], sorted(split_user_ids))
 
 
@@ -90,9 +94,10 @@ def update_cost_title(data):
 
 
 def update_cost_status(data):
-    status_update = Splited.objects.get(cost_id=data['cost_id'], user_id=data['user_id'])
-    status_update.payment = data['payment']
-    status_update.save()
+    if not CostController().check_if_user_isPayer(int(data['user_id']), int(data['cost_id'])):
+        status_update = Splited.objects.get(cost_id=data['cost_id'], user_id=data['user_id'])
+        status_update.payment = data['payment']
+        status_update.save()
 
 
 def manage_cost_action(user_id, data):
@@ -128,7 +133,9 @@ def get_all_cost_details(user_id):
 
         costs = []
         for cost_data in costs_data:
-            if any(user['user_id'] == user_id for user in cost_data['split']):
+            in_split = any(user['user_id'] == user_id for user in cost_data['split'])
+            in_payer = cost_data['payer']['user_id'] == user_id
+            if in_split or in_payer:
                 data = calculate_to_return(cost_data, user_id)
                 cost = {
                     'cost_id': cost_data['cost_id'], 'name': cost_data['cost_name'],

@@ -63,8 +63,7 @@
                             {% for data in cost.split_by %}
 
                             <li class="ps-2 pe-2">
-                                {% if cost.who_pay.was_you %}
-
+                                {% if cost.who_pay.was_you and cost.who_pay.payer_id != data.user_id %}
                                 <button type="button" class="btn p-0 me-1" data-bs-toggle="modal"
                                         id="edit-cost-split-button-{{ data.user_id }}"
                                         data-bs-target="#cost-status-modal" data-value-friend-id="{{ data.user_id }}"

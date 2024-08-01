@@ -50,9 +50,15 @@
                         </div>
                     </div>
 
+                    <div class="row mb-2 ">
+                        <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            <input type="checkbox" class="btn-check" id="cost-split-checkbox" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="cost-split-checkbox">Include me in cost splitting</label>
+                        </div>
+                    </div>
+
 
                     <div class="row justify-content-between">
-
                         <div class="col form-floating d-flex justify-content-start">
                             <div class="dropdown">
                                 <button class="btn btn-secondary dropdown-toggle btn-sm " type="button"
@@ -96,7 +102,7 @@
                             <table class="table table-sm text-start small table-borderless rounded-2">
                                 <thead class="border-bottom border-info">
                                 <tr>
-                                    <th colspan="4">
+                                    <th colspan="5">
                                         <button type="button" class="btn btn-success bi btn-sm table-button"
                                                 id="send-button" style="display: none;" disabled>
                                             Add cost
@@ -107,6 +113,7 @@
                                     <th scope="col">Title</th>
                                     <th scope="col">Cost</th>
                                     <th scope="col">Split</th>
+                                    <th scope="col">Including me</th>
                                     <th scope="col"></th>
                                 </tr>
                                 </thead>
