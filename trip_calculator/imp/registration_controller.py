@@ -1,8 +1,8 @@
-from trip_calculator1.models import User
+from trip_calculator.models import User
 from django.contrib.auth.hashers import make_password
-from trip_calculator1.imp.email_controller import EmailSender
+from trip_calculator.imp.email_controller import EmailSender
 import json, secrets, string
-from trip_calculator1.imp.friend_controller import FriendController
+from trip_calculator.imp.friend_controller import FriendController
 
 
 def generate_random_password(length=12):

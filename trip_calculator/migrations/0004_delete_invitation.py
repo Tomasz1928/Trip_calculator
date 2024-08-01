@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('trip_calculator1', '0003_trip_trip_owner'),
+        ('trip_calculator', '0003_trip_trip_owner'),
     ]
 
     operations = [

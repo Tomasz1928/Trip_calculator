@@ -1,11 +1,11 @@
 from django.db import transaction
-from trip_calculator1.models import Cost, Splited, User
+from trip_calculator.models import Cost, Splited, User
 from collections import defaultdict
 import ast
 
 
 def get_trip_controller():
-    from trip_calculator1.imp.trip_controller import TripController
+    from trip_calculator.imp.trip_controller import TripController
     return TripController()
 
 

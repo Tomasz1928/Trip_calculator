@@ -1,4 +1,4 @@
-from trip_calculator1.models import Friend, UserTrip, Trip
+from trip_calculator.models import Friend, UserTrip, Trip
 from django.db.models import Q
 from django.db import transaction
 

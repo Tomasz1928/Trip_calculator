@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from trip_calculator1.imp import registration_controller, trip_controller, cost_controller
+from trip_calculator.imp import registration_controller, trip_controller, cost_controller
 from django.contrib.auth import authenticate, login, logout
-from trip_calculator1.imp.friend_controller import FriendController
+from trip_calculator.imp.friend_controller import FriendController
 
 background = {
     'img_url': 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzIyMjJ8MHwxfHNlYXJjaHwxfHxyYW5kb20lMjBuYXR1cmFsJTIwdmlld3xlbnwwfHx8fDE3MjA3MjU1MDV8MA&ixlib=rb-4.0.3&q=80&w=1080'}
@@ -20,9 +20,9 @@ def login_page_view(request):
             request.session['user_id'] = user.user_id
             return redirect('home_view')
         else:
-            return render(request, 'trip_calculator1/login.html', {'login': {'error': True}, 'background': background})
+            return render(request, 'trip_calculator/login.html', {'login': {'error': True}, 'background': background})
     else:
-        return render(request, 'trip_calculator1/login.html', {'login': {'error': False}, 'background': background})
+        return render(request, 'trip_calculator/login.html', {'login': {'error': False}, 'background': background})
 
 
 def registration_view(request):
@@ -33,10 +33,10 @@ def registration_view(request):
             return redirect("login_view")
         else:
             registration['error'] = True
-            return render(request, 'trip_calculator1/registration.html',
+            return render(request, 'trip_calculator/registration.html',
                           {"registration": registration, 'background': background})
 
-    return render(request, 'trip_calculator1/registration.html',
+    return render(request, 'trip_calculator/registration.html',
                   {"registration": registration, 'background': background})
 
 
@@ -91,7 +91,7 @@ def create_trip_view(request):
         trip_controller.add_trip(request.session.get('user_id'), request.POST)
         return redirect("home_view")
 
-    return render(request, 'trip_calculator1/create_trip.html',
+    return render(request, 'trip_calculator/create_trip.html',
               {'menu': menu, 'background': background,
                'person': FriendController(request.session.get('user_id')).get_friend_list()})
 
@@ -105,7 +105,7 @@ def invite_friend_view(request):
         response.set_cookie('home_page', 'friend', max_age=3)
         return response
 
-    return render(request, 'trip_calculator1/addFriends.html', {'menu': menu, 'background': background})
+    return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
 
 
 @login_required
@@ -121,7 +121,7 @@ def add_cost_view(request, trip_id):
 
     trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
     trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_squad))
-    return render(request, 'trip_calculator1/add_cost.html', {'menu': menu, 'person': trip_squad, 'background': background})
+    return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': trip_squad, 'background': background})
 
 
 @login_required
@@ -136,5 +136,5 @@ def home_view(request):
 
 
 
-    return render(request, 'trip_calculator1/home_view.html',
+    return render(request, 'trip_calculator/home_view.html',
                   {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})
