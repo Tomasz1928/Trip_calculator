@@ -37,10 +37,10 @@ DEFAULT_FROM_EMAIL = 'trip.calculator.servis@gmail.com'
 
 SITE_URL = 'http://192.168.18.27:8000'
 
-AUTH_USER_MODEL = 'trip_calculator.User'
+AUTH_USER_MODEL = 'trip_calculator1.User'
 
 AUTHENTICATION_BACKENDS = [
-    'trip_calculator.backends.CustomUserBackend',
+    'trip_calculator1.backends.CustomUserBackend',
     'django.contrib.auth.backends.ModelBackend'
 ]
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
@@ -59,7 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'trip_calculator.apps.TripCalculatorConfig'
+    'trip_calculator1.apps.TripCalculatorConfig'
 ]
 
 MIDDLEWARE = [

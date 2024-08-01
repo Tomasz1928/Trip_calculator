@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('cost_name', models.CharField(max_length=255)),
                 ('value', models.DecimalField(decimal_places=2, max_digits=10)),
                 ('payer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('trip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator.trip')),
+                ('trip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator1.trip')),
             ],
         ),
         migrations.CreateModel(
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             name='Splited',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('cost', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator.cost')),
+                ('cost', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator1.cost')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
         ),
@@ -88,7 +88,7 @@ class Migration(migrations.Migration):
             name='UserTrip',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('trip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator.trip')),
+                ('trip', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='trip_calculator1.trip')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],
             options={

@@ -1,10 +1,10 @@
-from trip_calculator.models import Trip, UserTrip
+from trip_calculator1.models import Trip, UserTrip
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 import ast
 
 def get_cost_controller():
-    from trip_calculator.imp.cost_controller import CostController
+    from trip_calculator1.imp.cost_controller import CostController
     return CostController()
 
 class TripController:

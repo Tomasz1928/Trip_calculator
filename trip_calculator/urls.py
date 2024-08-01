@@ -1,6 +1,6 @@
 from django.urls import path
 
-from trip_calculator import views
+from trip_calculator1 import views
 
 urlpatterns = [
     path('login/', views.login_page_view, name='login_view'),

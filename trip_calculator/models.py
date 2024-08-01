@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from  trip_calculator.imp.user_menager import UserManager
+from  trip_calculator1.imp.user_menager import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
