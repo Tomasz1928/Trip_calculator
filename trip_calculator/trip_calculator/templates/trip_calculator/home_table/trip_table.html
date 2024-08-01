@@ -35,7 +35,11 @@
                     </ul>
                 </div>
             </td>
-            <td scope="col">{{ trip.cost }}</td>
+            <td scope="col">
+                {% with value=trip.cost %}
+                {{ value|floatformat:2 }}
+                {% endwith %}
+            </td>
         </tr>
         {% endfor %}
         </tbody>

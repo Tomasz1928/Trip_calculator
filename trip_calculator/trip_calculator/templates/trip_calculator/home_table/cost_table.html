@@ -1,4 +1,5 @@
 {% for trip in cost.for_trip %}
+{% load l10n %}
 
 <div id="main-cost-tabel-{{ trip.id }}" style="display: none">
     <div class="table-container mb-2">
@@ -103,7 +104,9 @@
                        id="edit-cost-value-button-{{ cost.cost_id }}" data-bs-target="#cost-update-modal"
                        data-value-cost-id="{{ cost.cost_id }}" data-value-cost-name="{{ cost.name }}"
                        data-value-trip-id="{{ trip.id }}" data-value-cost-value="{{ cost.cost }}">
-                        {{ cost.cost }}
+                        {% with value=cost.cost %}
+                        {{ value|floatformat:2 }}
+                        {% endwith %}
                         <i class="bi bi-pencil-square ms-1" style="color:#6F42C1"></i>
                     </a>
                     {% else %}
@@ -111,10 +114,16 @@
                     {% endif %}
 
                 </td>
-                <td scope="col">{{ cost.unit_cost }}</td>
+                <td scope="col">
+                    {% with value=cost.unit_cost %}
+                    {{ value|floatformat:2 }}
+                    {% endwith %}
+                </td>
                 <td scope="col"
                     style="color:{% if cost.return == '0.00' or cost.return == '0' %}black{% elif cost.who_pay.was_you %}darkgreen{% else %}red{% endif %};">
-                    {{ cost.return }}
+                    {% with value=cost.return %}
+                    {{ value|floatformat:2 }}
+                    {% endwith %}
                 </td>
                 <td scope="col">
                     {% if cost.who_pay.was_you %}
@@ -162,7 +171,9 @@
 
                         <td scope="col"
                             style="color:{% if overall.return_from.positiv %}red {% else %}green {% endif %}">
-                            {{ overall.return_from.value }}
+                            {% with value=overall.return_from.value %}
+                            {{ value|floatformat:2 }}
+                            {% endwith %}
                         </td>
                     </tr>
                     {% endfor %}
