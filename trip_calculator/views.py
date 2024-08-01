@@ -71,8 +71,9 @@ def edit_friend_endpoint(request):
 def edit_cost_endpoint(request):
     cost_controller.manage_cost_action(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
+    trip_id = request.POST['trip_id']
     response.set_cookie('home_page', 'cost', max_age=3)
-    response.set_cookie('trip_id', f'{request.POST['trip_id']}', max_age=3)
+    response.set_cookie('trip_id', f'{trip_id}', max_age=3)
     return response
 
 
@@ -128,7 +129,9 @@ def add_cost_view(request, trip_id):
 def home_view(request):
     user_id = request.session.get('user_id')
     user = registration_controller.get_user_infor(user_id)
-    menu = {"current_page": f'Hello {user['name']} {user['lastname']}'}
+    userName = user['name']
+    userLastname = user['lastname']
+    menu = {"current_page": f'Hello {userName} {userLastname}'}
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
     costs = cost_controller.get_cost_overall(user_id)
