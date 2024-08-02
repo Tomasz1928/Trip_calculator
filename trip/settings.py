@@ -107,7 +107,7 @@ DATABASES = {
         'NAME': 'dpg-cqm81q3qf0us73a70gvg-a',
         'USER': 'tripcalculatoedb_user',
         'PASSWORD': 'yxKMTM1dZFynlNJORLo8cN85jP7W8uFL',
-        'HOST': 'postgresql://tripcalculatoedb_user:yxKMTM1dZFynlNJORLo8cN85jP7W8uFL@dpg-cqm81q3qf0us73a70gvg-a/tripcalculatoedb',
+        'HOST': 'dpg-cqm81q3qf0us73a70gvg-a/tripcalculatoedb',
         'PORT': '5432',
     }
 }
