@@ -104,10 +104,10 @@ WSGI_APPLICATION = 'trip.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dpg-cqm81q3qf0us73a70gvg-a',
+        'NAME': 'tripcalculatoedb',
         'USER': 'tripcalculatoedb_user',
         'PASSWORD': 'yxKMTM1dZFynlNJORLo8cN85jP7W8uFL',
-        'HOST': 'dpg-cqm81q3qf0us73a70gvg-a/tripcalculatoedb',
+        'HOST': 'dpg-cqm81q3qf0us73a70gvg-a',
         'PORT': '5432',
     }
 }
