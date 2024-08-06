@@ -39,7 +39,7 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'trip.calculator.servis@gmail.com'
 
 
-SITE_URL = 'http://192.168.18.27:8000'
+SITE_URL = 'https://trip-calculator.onrender.com'
 
 AUTH_USER_MODEL = 'trip_calculator.User'
 
