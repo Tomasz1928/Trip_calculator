@@ -55,7 +55,7 @@ def logout_endpoint(request):
 def edit_trip_endpoint(request):
     trip_controller.update_trip(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
-    response.set_cookie('home_page', 'trip', max_age=3)
+    response.set_cookie('home_page', 'trip', max_age=20)
     return response
 
 
@@ -63,7 +63,7 @@ def edit_trip_endpoint(request):
 def edit_friend_endpoint(request):
     FriendController(request.session.get('user_id')).delete_friend(request.GET['friend_id'])
     response = HttpResponseRedirect(reverse("home_view"))
-    response.set_cookie('home_page', 'friend', max_age=3)
+    response.set_cookie('home_page', 'friend', max_age=20)
     return response
 
 
@@ -72,8 +72,8 @@ def edit_cost_endpoint(request):
     cost_controller.manage_cost_action(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
     trip_id = request.POST['trip_id']
-    response.set_cookie('home_page', 'cost', max_age=3)
-    response.set_cookie('trip_id', f'{trip_id}', max_age=3)
+    response.set_cookie('home_page', 'cost', max_age=20)
+    response.set_cookie('trip_id', f'{trip_id}', max_age=20)
     return response
 
 
@@ -81,7 +81,7 @@ def edit_cost_endpoint(request):
 def edit_account_endpoint(request):
     registration_controller.update_account(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
-    response.set_cookie('home_page', 'account', max_age=3)
+    response.set_cookie('home_page', 'account', max_age=20)
     return response
 
 
@@ -103,7 +103,7 @@ def invite_friend_view(request):
     if request.method == 'POST':
         registration_controller.invite_user(request.session.get('user_id'), request.POST)
         response = HttpResponseRedirect(reverse("home_view"))
-        response.set_cookie('home_page', 'friend', max_age=3)
+        response.set_cookie('home_page', 'friend', max_age=20)
         return response
 
     return render(request, 'trip_calculator/addFriends.html', {'menu': menu, 'background': background})
@@ -116,8 +116,8 @@ def add_cost_view(request, trip_id):
     if request.method == 'POST':
         cost_controller.add_cost(user_id, trip_id, request.POST)
         response = HttpResponseRedirect(reverse("home_view"))
-        response.set_cookie('home_page', 'cost', max_age=3)
-        response.set_cookie('trip_id', f'{trip_id}', max_age=3)
+        response.set_cookie('home_page', 'cost', max_age=20)
+        response.set_cookie('trip_id', f'{trip_id}', max_age=20)
         return response
 
     trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
@@ -135,7 +135,6 @@ def home_view(request):
     trip = trip_controller.get_all_trips_with_details(user_id)
     friend = FriendController(user_id).get_friend_list()
     costs = cost_controller.get_cost_overall(user_id)
-    print(trip)
 
 
 

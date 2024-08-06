@@ -30,7 +30,7 @@
 
 
 <body class="background-img-style" style="background-image: url('{{ background.img_url }}');">
-<div class="container">
+<div class="container blur-background">
     <div class="row central-container justify-content-center align-items-center">
 
         <div class="col-10 col-md-6  border border-dark-subtle rounded border-2 container-main">
@@ -72,7 +72,8 @@
                         <div class="row justify-content-center">
                             <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
                                 <div class="d-grid gap-2">
-                                    <button type="submit" class="btn btn-success" id="login-button" disabled>Login</button>
+                                    <button type="submit" class="btn btn-success showSpinnerBtn" id="login-button"
+                                            data-bs-toggle="modal" data-bs-target="#loading-modal" disabled>Login</button>
                                 </div>
                             </div>
 
@@ -97,10 +98,9 @@
     </div>
 </div>
 
-
 </body>
 {% include 'trip_calculator/account_recovery.html' %}
-
+{% include 'trip_calculator/loading.html' %}
 
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>

@@ -16,7 +16,6 @@ document.getElementById('recovery-account-button').addEventListener('click', val
     function validateRecoveryForm() {
         const recoveryButton = document.getElementById('recovery-submit-button');
         const inputs = document.querySelectorAll('#recovery-email-input');
-        console.log(inputs)
         disableButton(recoveryButton, inputs)
     }
 
@@ -29,7 +28,6 @@ document.getElementById('recovery-account-button').addEventListener('click', val
     function disableButton(button, inputs) {
         inputs.forEach(input => input.addEventListener('input', () => {
             const allFilled = [...inputs].every(input => input.value.trim() !== "");
-            console.log(allFilled)
             button.disabled = !allFilled;
         }))
     }

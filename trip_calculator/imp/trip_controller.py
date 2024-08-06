@@ -14,7 +14,6 @@ class TripController:
 
     def add_trip(self, name, start, end, description, squad, owner):
         with transaction.atomic():
-            print(owner)
             new_trip = Trip(name=name, start=start, end=end, description=description, trip_owner_id=owner)
             new_trip.save()
             user_trips = [UserTrip(trip=new_trip, user_id=user_id) for user_id in squad]
@@ -27,7 +26,6 @@ class TripController:
 
     def update_trip(self, trip_id, **kwargs):
         trip = Trip.objects.get(pk=trip_id)
-        print(trip)
 
         fields_to_update = {
             'name': kwargs.get('name'),
@@ -35,7 +33,6 @@ class TripController:
             'delete': kwargs.get('delete')
         }
 
-        print(fields_to_update)
 
         for field, value in fields_to_update.items():
             if value:
@@ -90,7 +87,6 @@ def remove_trip(user_id, data):
 def update_trip(user_id, data):
     if TripController().check_if_user_isTripOwner(user_id, data['trip_id']):
         kwargs = {key: value for key, value in data.items() if value}
-        print(kwargs)
         trip_id = int(kwargs['trip_id'])
         kwargs.pop('csrfmiddlewaretoken', None)
         kwargs.pop('trip_id', None)
