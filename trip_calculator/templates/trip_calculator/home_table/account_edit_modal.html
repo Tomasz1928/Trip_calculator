@@ -1,0 +1,131 @@
+<div class="modal fade" id="account-common-edit-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit Account</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-12">
+                                <div class="justify-content-center form-floating">
+                                    <p class="h5 text-center fs-5 fs-md-4">Select the data you would like to
+                                        update</p>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid pt-3">
+                                <div class="row justify-content-center align-items-center">
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <button type="button" class="btn btn-primary w-100 modal-button btn-sm" data-value="firstname"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#account-edit-modal" id="account-edit-button-firstname">
+                                            Firstname
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <button type="submit" class="btn btn-primary w-100 modal-button btn-sm" data-value="lastname"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#account-edit-modal" id="account-edit-button-lastname">
+                                            Lastname
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <button type="submit" class="btn btn-primary w-100 modal-button btn-sm" data-value="email"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#account-edit-modal" id="account-edit-button-email">
+                                            Email
+                                        </button>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <button type="submit" class="btn btn-primary w-100 modal-button btn-sm" data-value="password"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#account-edit-modal" id="account-edit-button-password">
+                                            Password
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-center pt-3">
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2">
+                                        <button type="button" class="btn btn-secondary modal-button btn-sm"
+                                                data-bs-dismiss="modal"
+                                                aria-label="Close">Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="account-edit-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Edit Account</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row justify-content-center align-items-center">
+
+                        <div class="row justify-content-center mb-3">
+                            <div class="col-12">
+                                <div class="justify-content-center form-floating">
+                                    <p class="h5 text-center fs-5 fs-md-4" id="account-update-modal-p"></p>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid">
+                                <form action="{% url 'edit_account_endpoint' %}" method="POST">
+                                    <div class="row justify-content-center align-items-center">
+                                        <div class="row justify-content-center mb-3">
+                                            {% csrf_token %}
+
+
+                                               <div class="row mb-2 mt-2">
+                                                    <div class="col-sm-12">
+                                                        <input type="email" class="form-control small-input" id="account-update-modal-input" name="email"
+                                                         placeholder="Email">
+                                                    </div>
+                                               </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row align-items-center">
+                                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2">
+                                            <div class="d-flex gap-3 justify-content-between pt-3">
+                                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+                                                        aria-label="Close">Cancel
+                                                </button>
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                        id="account-edit-modal-submit-button" disabled
+                                                data-bs-toggle="modal" data-bs-target="#loading-modal">Update</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

@@ -1,0 +1,11 @@
+.table-sm th,
+.table-sm td {
+    padding: 0.75rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+
+.container-table {
+    margin-top: 20px;
+}
