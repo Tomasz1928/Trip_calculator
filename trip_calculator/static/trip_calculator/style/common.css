@@ -9,6 +9,7 @@
 
 
 .background-img-style {
+    background-image: url('/static/trip_calculator/images/background.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     height: 100vh

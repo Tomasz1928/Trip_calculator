@@ -11,20 +11,10 @@ def generate_random_password(length=12):
     return password
 
 class UserController:
-    def __init__(self):
-        pass
 
     def _create_user_in_DB_(self, email, firstname, lastname, password_hashed):
-        if not email:
-            raise ValueError("The Email field must be set")
-        user = User(
-            email=email,
-            firstname=firstname,
-            lastname=lastname,
-            password=password_hashed
-        )
+        user = User(email=email, firstname=firstname, lastname=lastname, password=password_hashed)
         user.save()
-        return user
 
     def update_user(self, user_id, **kwargs):
         update_user = User.objects.get_user_by_id(user_id)
@@ -43,11 +33,8 @@ class UserController:
             if value:
                 if field == 'password':
                     update_user.password = make_password(value)
-                    send = EmailSender()
-                    send.set_email(User.objects.get_user_by_id(user_id).email)
-                    send.set_password(value)
-                    send.generate_update_password_message()
-                    send.send_email()
+                    send = EmailSender(User.objects.get_user_by_id(user_id).email, value)
+                    send.send_email('update_password')
                 else:
                     setattr(update_user, field, value)
         update_user.save()
@@ -56,18 +43,12 @@ class UserController:
         return User.objects.filter(email=email).exists()
 
     def register_user(self, email, firstname, lastname):
-        if self.check_if_email_exists(email):
-            return {"registration_pass": False}
-        else:
-            password = generate_random_password()
-            password_hashed = make_password(password)
-            self._create_user_in_DB_(email, firstname, lastname, password_hashed)
-            send = EmailSender()
-            send.set_email(email)
-            send.set_password(password)
-            send.generate_registration_message()
-            send.send_email()
-            return {"registration_pass": True}
+        password = generate_random_password()
+        password_hashed = make_password(password)
+        self._create_user_in_DB_(email, firstname, lastname, password_hashed)
+        send = EmailSender(email, password)
+        send.send_email('registration')
+        return {"registration_pass": True}
 
     def invite_user(self, user_id, email, firstname, lastname):
         if self.check_if_email_exists(email):
@@ -82,12 +63,8 @@ class UserController:
 
             new_friend = FriendController(user_id)
             new_friend.add_friend(User.objects.get_by_natural_key(email).user_id)
-
-            send = EmailSender()
-            send.set_email(email)
-            send.set_password(password)
-            send.generate_invitation_message()
-            send.send_email()
+            send = EmailSender(email, password)
+            send.send_email('invitation')
             return {"registration_pass": True}
 
     def recovery(self, email):
@@ -95,11 +72,8 @@ class UserController:
             user = User.objects.get_by_natural_key(email).user_id
             new_password = generate_random_password()
             self.update_user(user, password=new_password)
-            recovery_message = EmailSender()
-            recovery_message.set_email(email)
-            recovery_message.set_password(new_password)
-            recovery_message.generate_recovery_message()
-            recovery_message.send_email()
+            recovery_message = EmailSender(email, new_password)
+            recovery_message.send_email('recovery')
             return {"recovery_pass": True}
         else:
             return {"recovery_pass": False}
