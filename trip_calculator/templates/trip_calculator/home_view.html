@@ -37,13 +37,13 @@
                         </button>
                         <button class="btn btn-primary w-100 mt-1 small-button" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseWidthExample" aria-expanded="false"
-                                aria-controls="collapseWidthExample" id="main_cost" {% if cost.any %} {% else %}disabled{% endif %}>
+                                aria-controls="collapseWidthExample" id="main_cost" {% if allTripData %} {% else %}disabled{% endif %}>
                             Cost
                         </button>
-                        {% if cost.any %}
+                        {% if allTripData %}
                         <div class="collapse" id="collapseWidthExample">
-                            {% for trip in cost.for_trip %}
-                            <button type="button" class="btn btn-secondary w-100 mt-1 bg-secondary-subtle small-button text-secondary-emphasis" id="main-cost-button-{{ trip.id }}" data-id="{{ trip.id }}"
+                            {% for trip in allTripData %}
+                            <button type="button" class="btn btn-secondary w-100 mt-1 bg-secondary-subtle small-button text-secondary-emphasis" id="main-cost-button-{{ trip.trip_id }}" data-id="{{ trip.trip_id }}"
                             data-bs-toggle="collapse" data-bs-target="#collapseWidthExample">{{ trip.name }}</button>
                             {% endfor %}
                         </div>

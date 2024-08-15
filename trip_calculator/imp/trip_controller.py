@@ -1,94 +1,214 @@
-from trip_calculator.models import Trip, UserTrip
-from django.shortcuts import get_object_or_404
+from trip_calculator.models import Trip, UserTrip, Cost, Splited
+from django.db.models import Q
 from django.db import transaction
-import ast
+from itertools import groupby
+from operator import itemgetter
+from django.core.cache import cache
 
-def get_cost_controller():
-    from trip_calculator.imp.cost_controller import CostController
-    return CostController()
 
 class TripController:
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.trip_details_objects = self.get_trip_details_objects()
+        self.trip_info = self.get_trip_info()
 
-    def __init__(self):
-        pass
+    def get_info(self):
+        self.trip_details_objects = self.get_trip_details_objects()
+        self.trip_info = self.get_trip_info()
 
-    def add_trip(self, name, start, end, description, squad, owner):
+        return self.trip_info
+
+    def new_trip(self, name, start, end, description, squad):
         with transaction.atomic():
-            new_trip = Trip(name=name, start=start, end=end, description=description, trip_owner_id=owner)
+            new_trip = Trip(name=name, start=start, end=end, description=description, trip_owner_id=self.user_id)
             new_trip.save()
             user_trips = [UserTrip(trip=new_trip, user_id=user_id) for user_id in squad]
             UserTrip.objects.bulk_create(user_trips)
+            self.trip_details_objects = self.get_trip_details_objects()
 
-    def delete_trip(self, trip_id):
+    def get_trip_details_objects(self):
+        return Trip.objects.filter(
+            Q(trip_owner__user_id=self.user_id) |
+            Q(usertrip__user__user_id=self.user_id)
+        ).distinct().prefetch_related('cost_set', 'cost_set__splited_set', 'usertrip_set__user')
+
+    def find_trip(self, trip_id):
+        for trip in self.trip_details_objects:
+            if trip.trip_id == trip_id:
+                return trip
+        return None
+
+    def update_trip_details(self, trip_id, **kwargs):
+        trip = Trip.objects.get(pk= trip_id)
+
+        if trip and trip.trip_owner_id == self.user_id:
+            fields_to_update = {
+                'name': kwargs.get('name'),
+                'description': kwargs.get('description'),
+                'delete': kwargs.get('delete')
+            }
+
+            for field, value in fields_to_update.items():
+                if value != None:
+                    if field == 'delete':
+                        trip.delete()
+                    else:
+                        setattr(trip, field, value)
+                        trip.save()
+            self.get_info()
+
+    def get_trip_info(self):
+        trip_details = []
+
+        for trip in self.trip_details_objects:
+            trip_info = {
+                'trip_id': trip.trip_id, 'name': trip.name, 'start': trip.start, 'end': trip.end,
+                'description': trip.description,
+                'owner': trip.trip_owner.user_id == self.user_id,
+                'squad': [{'user_id': user_trip.user.user_id, 'firstname': user_trip.user.firstname}
+                          for user_trip in trip.usertrip_set.all()],
+                'costs': {'own_cost': 0, 'costs': [], 'unpaid_users': []}
+            }
+
+            for cost in trip.cost_set.all():
+                splited_list = list(cost.splited_set.all())
+                payed_was_you = cost.payer.user_id == self.user_id
+                user_in_splited = any(splited.user.user_id == self.user_id for splited in splited_list)
+                if user_in_splited or payed_was_you:
+                    number_of_splited = len(splited_list)
+                    unit_cost = float(round(cost.value / number_of_splited if number_of_splited > 0 else 0, 2))
+                    unpaid_users = [splited.user for splited in splited_list if not splited.payment]
+                    trip_info['costs']['own_cost'] += unit_cost if user_in_splited else 0
+                    to_return = unit_cost * len(unpaid_users) if payed_was_you else unit_cost
+
+                    cost_info = {
+                        'cost_id': cost.cost_id, 'cost_name': cost.cost_name, 'value': float(cost.value),
+                        'unit_cost': unit_cost,
+                        'payer': {'user_id': cost.payer.user_id, 'firstname': cost.payer.firstname,
+                                  'lastname': cost.payer.lastname,
+                                  'was_you':payed_was_you },
+                        'splited': [{'user_id': splited.user.user_id, 'payment': splited.payment,
+                                     'firstname': splited.user.firstname, 'lastname': splited.user.lastname}
+                                    for splited in splited_list],
+
+                        'to_return':round(float(to_return),2)
+                    }
+
+                    unpaid = [{'user_id': user.user_id, 'related_id': cost.payer.user_id,
+                               'unit_cost': unit_cost if payed_was_you else unit_cost * -1}
+                              for user in unpaid_users]
+
+                    trip_info['costs']['costs'].append(cost_info)
+                    trip_info['costs']['unpaid_users'].extend(unpaid)
+
+            overall_data = self.prepare_overall_data(trip_info['costs']['unpaid_users'])
+            extended_overall_data = self.extend_prepare_overall_data(overall_data, trip.usertrip_set.all())
+
+            trip_info['costs']['unpaid_users'] = extended_overall_data
+
+            trip_details.append(trip_info)
+        return trip_details
+
+    def prepare_overall_data(self, unpaid_list):
+        if unpaid_list:
+            for item in unpaid_list:
+                if item['related_id'] == self.user_id:
+                    item['user_id'], item['related_id'] = item['related_id'], item['user_id']
+
+            only_for_user = list(
+                filter(lambda unpaid: unpaid['user_id'] == self.user_id or unpaid['related_id'] == self.user_id,
+                       unpaid_list))
+            only_for_user.sort(key=itemgetter('user_id', 'related_id'))
+
+            reduce_only_for_user = [
+                {'user_id': key[0],'related_id': key[1],
+                 'unit_cost': round(sum(item['unit_cost'] for item in group), 2)}
+                for key, group in groupby(only_for_user, key=lambda x: (x['user_id'], x['related_id']))
+            ]
+
+            for item in reduce_only_for_user:
+                unit_cost = item['unit_cost']
+                item['related_user_return'] = unit_cost > 0
+                item['unit_cost'] = abs(unit_cost)
+            return reduce_only_for_user
+
+    def extend_prepare_overall_data(self, overall_data, data):
+        if overall_data:
+            for data in data:
+                for related in overall_data:
+                    if related['related_id'] == data.user_id:
+                        related['related_firstname'] = data.user.firstname
+                        related['related_lastname'] = data.user.lastname
+            return overall_data
+
+
+class CostController(TripController):
+    def add_cost(self, trip_id, name, value, split_user_ids):
         with transaction.atomic():
-            trip = Trip.objects.get(pk=trip_id)
-            trip.delete()
+            new_cost = Cost(trip_id=trip_id, payer_id=self.user_id, cost_name=name, value=value)
+            new_cost.save()
+            splits = [Splited(cost=new_cost, user_id=user_id, payment=(self.user_id == user_id)) for user_id in
+                      split_user_ids]
+            Splited.objects.bulk_create(splits)
 
-    def update_trip(self, trip_id, **kwargs):
-        trip = Trip.objects.get(pk=trip_id)
+    def find_cost(self, cost_id):
+        for trip in self.trip_details_objects:
+            cost = next((cost for cost in trip.cost_set.all() if cost.cost_id == cost_id), None)
+            if cost:
+                return cost
+        return None
 
-        fields_to_update = {
-            'name': kwargs.get('name'),
-            'description': kwargs.get('description'),
-            'delete': kwargs.get('delete')
-        }
+    def get_splited_info(self, cost_id):
+        cost = self.find_cost(cost_id)
+        if cost:
+            return list(cost.splited_set.all())
+        else:
+            return None
 
+    def update_cost_details(self, cost_id, **kwargs):
+        cost = Cost.objects.get(cost_id=cost_id)
+        splited = Splited.objects.filter(cost_id=cost_id)
 
-        for field, value in fields_to_update.items():
-            if value:
-                if field == 'delete':
-                    self.delete_trip(trip_id)
-                else:
-                    setattr(trip, field, value)
-        trip.save()
+        if (cost or splited)and cost.payer_id == self.user_id:
+            cost_to_update = {
+                'cost_name': kwargs.get('cost_name'),
+                'value': kwargs.get('value'),
+                'payment': kwargs.get('payment'),
+                'delete': kwargs.get('delete')
+            }
 
+            for field, value in cost_to_update.items():
+                if value != None:
+                    if field == 'delete':
+                        cost.delete()
 
-    def check_if_user_isTripOwner(self, user_id, trip_id):
-        owner = Trip.objects.get(pk=trip_id)
-        return owner.trip_owner.user_id == user_id
-
-    def get_all_trip_id_for_user(self, user_id):
-        return UserTrip.objects.filter(user_id=user_id).values_list('trip_id', flat=True)
-
-    def get_trip_squad(self, trip_id):
-        user_trips = UserTrip.objects.filter(trip_id=trip_id).select_related('user')
-        return [
-            {'firstname': user.firstname, 'lastname': user.lastname, 'user_id': user.user_id}
-            for user_trip in user_trips
-            for user in [user_trip.user]
-        ]
-
-    def get_trip_detail_by_trip_id(self, trip_id, user_id):
-        cost_controller = get_cost_controller()
-        trip_data = get_object_or_404(Trip, pk=trip_id)
-        squad = self.get_trip_squad(trip_id)
-        cost = round(cost_controller.get_all_trip_cost_for_user_id(trip_id, user_id), 2)
-        return {'squad': squad, 'name': trip_data.name, 'description': trip_data.description, 'cost': cost,
-                'owner': self.check_if_user_isTripOwner(user_id, trip_id), 'trip_id': trip_id}
-
-
-def add_trip(user_id, data):
-    squad = ast.literal_eval(data['squad'])
-    squad.append(user_id)
-    TripController().add_trip(data['name'], data['start'], data['end'], data['description'], sorted(squad), int(user_id))
+                    elif field == 'payment':
+                        split_user_id = kwargs.get('split_user_id')
+                        split = next(split for split in splited if split.user_id == int(split_user_id))
+                        split.payment = value
+                        split.save()
+                    else:
+                        setattr(cost, field, value)
+                        cost.save()
+            self.get_info()
 
 
-def get_all_trips_with_details(user_id):
-    trip_controller = TripController()
-    trip_ids = trip_controller.get_all_trip_id_for_user(user_id)
-    return [trip_controller.get_trip_detail_by_trip_id(trip_id, user_id) for trip_id in trip_ids]
+def get_user_TripController(user_id):
+    cache_key = f"TripController_{user_id}"
+    service = cache.get(cache_key)
 
+    if not service:
+        service = TripController(user_id)
+        cache.set(cache_key, service, timeout=60 * 30)
 
-def remove_trip(user_id, data):
-    if TripController().check_if_user_isTripOwner(user_id, data['trip_id']):
-        TripController().delete_trip(data['trip_id'])
+    return service
 
+def get_user_CostController(user_id):
+    cache_key = f"CostController_{user_id}"
+    service = cache.get(cache_key)
 
-def update_trip(user_id, data):
-    if TripController().check_if_user_isTripOwner(user_id, data['trip_id']):
-        kwargs = {key: value for key, value in data.items() if value}
-        trip_id = int(kwargs['trip_id'])
-        kwargs.pop('csrfmiddlewaretoken', None)
-        kwargs.pop('trip_id', None)
-        TripController().update_trip(trip_id, **kwargs)
+    if not service:
+        service = CostController(user_id)
+        cache.set(cache_key, service, timeout=60 * 30)
 
+    return service

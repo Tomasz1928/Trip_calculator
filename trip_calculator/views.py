@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from trip_calculator.imp import registration_controller, trip_controller, cost_controller
+from trip_calculator.imp import registration_controller
 from django.contrib.auth import authenticate, login, logout
 from trip_calculator.imp.friend_controller import FriendController
+from trip_calculator.imp.trip_controller import get_user_TripController, get_user_CostController
+from trip_calculator.imp import helper
 
 background = {
     'img_url': 'https://images.unsplash.com/photo-1500964757637-c85e8a162699?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w2MzIyMjJ8MHwxfHNlYXJjaHwxfHxyYW5kb20lMjBuYXR1cmFsJTIwdmlld3xlbnwwfHx8fDE3MjA3MjU1MDV8MA&ixlib=rb-4.0.3&q=80&w=1080'}
@@ -53,7 +55,7 @@ def logout_endpoint(request):
 
 @login_required()
 def edit_trip_endpoint(request):
-    trip_controller.update_trip(request.session.get('user_id'), request.POST)
+    helper.manage_trip_action(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'trip', max_age=20)
     return response
@@ -69,7 +71,7 @@ def edit_friend_endpoint(request):
 
 @login_required()
 def edit_cost_endpoint(request):
-    cost_controller.manage_cost_action(request.session.get('user_id'), request.POST)
+    helper.manage_cost_action(request.session.get('user_id'), request.POST)
     response = HttpResponseRedirect(reverse("home_view"))
     trip_id = request.POST['trip_id']
     response.set_cookie('home_page', 'cost', max_age=20)
@@ -89,7 +91,7 @@ def edit_account_endpoint(request):
 def create_trip_view(request):
     menu = {"current_page": 'Create new trip'}
     if request.method == 'POST':
-        trip_controller.add_trip(request.session.get('user_id'), request.POST)
+        helper.add_trip(request.session.get('user_id'), request.POST)
         return redirect("home_view")
 
     return render(request, 'trip_calculator/create_trip.html',
@@ -114,14 +116,17 @@ def add_cost_view(request, trip_id):
     menu = {"current_page": 'Add trip cost'}
     user_id = request.session.get('user_id')
     if request.method == 'POST':
-        cost_controller.add_cost(user_id, trip_id, request.POST)
+
+        helper.add_cost(user_id, trip_id, request.POST)
         response = HttpResponseRedirect(reverse("home_view"))
         response.set_cookie('home_page', 'cost', max_age=20)
         response.set_cookie('trip_id', f'{trip_id}', max_age=20)
         return response
 
-    trip_squad = trip_controller.TripController().get_trip_squad(trip_id)
-    trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_squad))
+    instance = get_user_TripController(user_id)
+    tripDetails = instance.get_info()
+    trip_info = next((trip for trip in tripDetails if trip['trip_id'] == trip_id), None).get('squad')
+    trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_info))
     return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': trip_squad, 'background': background})
 
 
@@ -129,14 +134,15 @@ def add_cost_view(request, trip_id):
 def home_view(request):
     user_id = request.session.get('user_id')
     user = registration_controller.get_user_infor(user_id)
+    instance = get_user_TripController(user_id)
+    tripDetails  = instance.get_info()
+
+
     userName = user['name']
     userLastname = user['lastname']
     menu = {"current_page": f'Hello {userName} {userLastname}'}
-    trip = trip_controller.get_all_trips_with_details(user_id)
+
     friend = FriendController(user_id).get_friend_list()
-    costs = cost_controller.get_cost_overall(user_id)
-
-
 
     return render(request, 'trip_calculator/home_view.html',
-                  {'cost': costs, 'menu': menu, 'trip_list': trip, 'friends_list': friend, 'user': user, 'background': background})
+                  {'menu': menu, 'friends_list': friend, 'user': user, 'background': background, 'allTripData':tripDetails})

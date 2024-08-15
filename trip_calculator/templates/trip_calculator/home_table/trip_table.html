@@ -17,7 +17,7 @@
         </thead>
 
         <tbody>
-        {% for trip in trip_list %}
+        {% for trip in allTripData %}
         <tr>
             <td scope="col">
                  {% if trip.owner %}
@@ -63,7 +63,7 @@
                 </div>
             </td>
             <td scope="col">
-                {% with value=trip.cost %}
+                {% with value=trip.costs.own_cost %}
                 {{ value|floatformat:2 }}
                 {% endwith %}
             </td>

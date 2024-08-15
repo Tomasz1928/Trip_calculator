@@ -13,6 +13,7 @@
 
                         <form action="{% url 'edit_trip_endpoint' %}" method="POST">
                             {% csrf_token %}
+                            <input type="hidden" name="action" value="delete">
                             <input type="hidden" name="delete" value="true">
                             <input type="hidden" id="trip-remove-modal-input-trip-id" name="trip_id" value="">
                             <div class="row justify-content-center mb-3">
@@ -62,6 +63,7 @@
 
                         <form action="{% url 'edit_trip_endpoint' %}" method="POST">
                             {% csrf_token %}
+                            <input type="hidden" name="action" value="title">
                             <input type="hidden" id="trip-title-modal-input-trip-id" name="trip_id" value="">
                             <div class="row justify-content-center mb-3">
                                 <div class="col-12 text-center">
@@ -116,6 +118,7 @@
 
                         <form action="{% url 'edit_trip_endpoint' %}" method="POST">
                             {% csrf_token %}
+                            <input type="hidden" name="action" value="description">
                             <input type="hidden" id="trip-description-modal-input-trip-id" name="trip_id" value="">
                             <div class="row justify-content-center mb-3">
                                 <div class="col-12 text-center">
