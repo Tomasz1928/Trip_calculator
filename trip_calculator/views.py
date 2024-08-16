@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render, redirect
 from trip_calculator.imp import registration_controller, helper
-from trip_calculator.imp.friend_controller import FriendController
+from trip_calculator.imp.friend_controller import get_user_FriendController
 from trip_calculator.imp.trip_controller import get_user_TripController
 
 
@@ -25,7 +25,7 @@ def login_page_view(request):
 def registration_view(request):
     registration = {'error': False}
     if request.GET:
-        registration_pass = registration_controller.registration(request.GET)
+        registration_pass = helper.manage_account_action(request.GET, action='register')
         if registration_pass["registration_pass"]:
             return redirect("login_view")
         else:
@@ -38,7 +38,7 @@ def registration_view(request):
 
 
 def recovery_endpoint(request):
-    registration_controller.recovery(request.GET)
+    helper.manage_account_action(request.GET, action='recovery')
     return redirect("login_view")
 
 
@@ -58,7 +58,7 @@ def edit_trip_endpoint(request):
 
 @login_required()
 def edit_friend_endpoint(request):
-    FriendController(request.user.user_id).delete_friend(request.GET['friend_id'])
+    get_user_FriendController(request.user.user_id).delete_friend(request.GET['friend_id'])
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'friend', max_age=20)
     return response
@@ -76,7 +76,7 @@ def edit_cost_endpoint(request):
 
 @login_required()
 def edit_account_endpoint(request):
-    registration_controller.update_account(request.user.user_id, request.POST)
+    helper.manage_account_action(request.GET, request.user.user_id, action='update')
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'account', max_age=20)
     return response
@@ -87,14 +87,14 @@ def create_trip_view(request):
     if request.method == 'POST':
         helper.add_trip(request.user.user_id, request.POST)
         return redirect("home_view")
-    person = FriendController(request.user.user_id).get_friend_list()
+    person = get_user_FriendController(request.user.user_id).get_friend_list()
     return render(request, 'trip_calculator/create_trip.html', {'person':person})
 
 
 @login_required
 def invite_friend_view(request):
     if request.method == 'POST':
-        registration_controller.invite_user(request.user.user_id, request.POST)
+        helper.manage_account_action(request.POST,request.user.user_id, action='invite')
         response = HttpResponseRedirect(reverse("home_view"))
         response.set_cookie('home_page', 'friend', max_age=20)
         return response
@@ -123,7 +123,7 @@ def add_cost_view(request, trip_id):
 @login_required
 def home_view(request):
     tripDetails = get_user_TripController(request.user.user_id).get_info()
-    friend = FriendController(request.user.user_id).get_friend_list()
+    friend = get_user_FriendController(request.user.user_id).get_friend_list()
     user = registration_controller.get_user_infor(request.user.user_id)
     return render(request, 'trip_calculator/home_view.html',
                   {'user': user, 'friends_list': friend, 'allTripData':tripDetails})

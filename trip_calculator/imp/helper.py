@@ -1,4 +1,5 @@
 from trip_calculator.imp.trip_controller import get_user_CostController, get_user_TripController
+from trip_calculator.imp.registration_controller import get_UserController
 import ast
 
 def add_trip(user_id, data):
@@ -43,3 +44,23 @@ def manage_cost_action(user_id, data):
     }
 
     action_map[action]()
+
+
+#  do poprawy
+def manage_account_action(data,*args, **kwargs):
+    action = kwargs.get('action')
+    instance = get_UserController()
+
+    action_map = {
+        'register': lambda: instance.register_user(data['email'], data['firstname'], data['lastname']),
+        'recovery': lambda: instance.recovery(data['email']),
+        'update': lambda: instance.update_account(args[0], data),
+        'invite': lambda: instance.invite_user(args[0], data)
+    }
+    return action_map[action]()
+
+
+
+
+
+

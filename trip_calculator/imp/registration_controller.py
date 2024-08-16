@@ -2,7 +2,8 @@ from trip_calculator.models import User
 from django.contrib.auth.hashers import make_password
 from trip_calculator.imp.email_controller import EmailSender
 import json, secrets, string
-from trip_calculator.imp.friend_controller import FriendController
+from trip_calculator.imp.friend_controller import get_user_FriendController
+from django.core.cache import cache
 
 
 def generate_random_password(length=12):
@@ -18,9 +19,6 @@ class UserController:
 
     def update_user(self, user_id, **kwargs):
         update_user = User.objects.get_user_by_id(user_id)
-
-        if 'firstname' in kwargs and kwargs['firstname']:
-            update_user.firstname = kwargs['firstname']
 
         fields_to_update = {
             'firstname': kwargs.get('firstname'),
@@ -42,30 +40,21 @@ class UserController:
     def check_if_email_exists(self, email):
         return User.objects.filter(email=email).exists()
 
-    def register_user(self, email, firstname, lastname):
+    def register_user(self, email, firstname, lastname, *args):
         password = generate_random_password()
         password_hashed = make_password(password)
         self._create_user_in_DB_(email, firstname, lastname, password_hashed)
         send = EmailSender(email, password)
-        send.send_email('registration')
+        send.send_email(args[0] if args else 'registration')
         return {"registration_pass": True}
 
     def invite_user(self, user_id, email, firstname, lastname):
         if self.check_if_email_exists(email):
             friend_id = User.objects.get_by_natural_key(email).user_id
-            new_friend = FriendController(user_id)
-            new_friend.add_friend(friend_id)
-            return {"registration_pass": False}
+            get_user_FriendController(user_id).add_friend(friend_id)
         else:
-            password = generate_random_password()
-            password_hashed = make_password(password)
-            self._create_user_in_DB_(email, firstname, lastname, password_hashed)
-
-            new_friend = FriendController(user_id)
-            new_friend.add_friend(User.objects.get_by_natural_key(email).user_id)
-            send = EmailSender(email, password)
-            send.send_email('invitation')
-            return {"registration_pass": True}
+            self.register_user(email,firstname, lastname, 'invitation')
+            get_user_FriendController(user_id).add_friend(User.objects.get_by_natural_key(email).user_id)
 
     def recovery(self, email):
         if self.check_if_email_exists(email):
@@ -78,6 +67,15 @@ class UserController:
         else:
             return {"recovery_pass": False}
 
+def get_UserController():
+    cache_key = f"UserController"
+    service = cache.get(cache_key)
+
+    if not service:
+        service = UserController()
+        cache.set(cache_key, service, timeout=60 * 30)
+    return service
+
 
 def registration(data):
     return UserController().register_user(data['email'], data['firstname'], data['lastname'])
@@ -85,11 +83,6 @@ def registration(data):
 
 def recovery(data):
     return UserController().recovery(data['email'])
-
-
-def get_user_infor(user_id):
-    data = User.objects.get_user_by_id(user_id)
-    return {'name': data.firstname, 'lastname': data.lastname, 'email': data.email, 'added': data.created_at.strftime("%d.%m.%Y"), 'user_id': user_id}
 
 
 def update_account(user_id, data):
@@ -103,4 +96,6 @@ def invite_user(user_id, data):
     for friend in friends_data:
         UserController().invite_user(user_id, friend['email'], friend['firstname'], friend['lastname'])
 
-
+def get_user_infor(user_id):
+    data = User.objects.get_user_by_id(user_id)
+    return {'name': data.firstname, 'lastname': data.lastname, 'email': data.email, 'added': data.created_at.strftime("%d.%m.%Y"), 'user_id': user_id}
