@@ -84,30 +84,26 @@ def edit_account_endpoint(request):
 
 @login_required
 def create_trip_view(request):
-    menu = {"current_page": 'Create new trip'}
     if request.method == 'POST':
         helper.add_trip(request.user.user_id, request.POST)
         return redirect("home_view")
-
-    return render(request, 'trip_calculator/create_trip.html',
-              {'menu': menu, 'person': FriendController(request.user.user_id).get_friend_list()})
+    person = FriendController(request.user.user_id).get_friend_list()
+    return render(request, 'trip_calculator/create_trip.html', {'person':person})
 
 
 @login_required
 def invite_friend_view(request):
-    menu = {"current_page": 'Invite friend'}
     if request.method == 'POST':
         registration_controller.invite_user(request.user.user_id, request.POST)
         response = HttpResponseRedirect(reverse("home_view"))
         response.set_cookie('home_page', 'friend', max_age=20)
         return response
 
-    return render(request, 'trip_calculator/addFriends.html', {'menu': menu})
+    return render(request, 'trip_calculator/addFriends.html')
 
 
 @login_required
 def add_cost_view(request, trip_id):
-    menu = {"current_page": 'Add trip cost'}
     user_id = request.user.user_id
 
     if request.method == 'POST':
@@ -121,13 +117,13 @@ def add_cost_view(request, trip_id):
     trip_info = next((trip for trip in tripDetails if trip['trip_id'] == trip_id), None).get('squad')
     trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_info))
 
-    return render(request, 'trip_calculator/add_cost.html', {'menu': menu, 'person': trip_squad})
+    return render(request, 'trip_calculator/add_cost.html', {'person': trip_squad})
 
 
 @login_required
 def home_view(request):
     tripDetails = get_user_TripController(request.user.user_id).get_info()
     friend = FriendController(request.user.user_id).get_friend_list()
-    menu = {"current_page": f'Hello {request.user.firstname} {request.user.lastname}'}
+    user = registration_controller.get_user_infor(request.user.user_id)
     return render(request, 'trip_calculator/home_view.html',
-                  {'menu': menu, 'friends_list': friend, 'allTripData':tripDetails})
+                  {'user': user, 'friends_list': friend, 'allTripData':tripDetails})
