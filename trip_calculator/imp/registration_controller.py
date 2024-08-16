@@ -58,9 +58,11 @@ class UserController:
 
     def recovery(self, email):
         if self.check_if_email_exists(email):
-            user = User.objects.get_by_natural_key(email).user_id
             new_password = generate_random_password()
-            self.update_user(user, password=new_password)
+            user = User.objects.get_by_natural_key(email)
+            user.password = make_password(new_password)
+            user.save()
+
             recovery_message = EmailSender(email, new_password)
             recovery_message.send_email('recovery')
             return {"recovery_pass": True}
@@ -75,26 +77,6 @@ def get_UserController():
         service = UserController()
         cache.set(cache_key, service, timeout=60 * 30)
     return service
-
-
-def registration(data):
-    return UserController().register_user(data['email'], data['firstname'], data['lastname'])
-
-
-def recovery(data):
-    return UserController().recovery(data['email'])
-
-
-def update_account(user_id, data):
-    kwargs = {key: value for key, value in data.items() if value}
-    kwargs.pop('csrfmiddlewaretoken', None)
-    UserController().update_user(user_id, **kwargs)
-
-
-def invite_user(user_id, data):
-    friends_data = json.loads(data['friend'])
-    for friend in friends_data:
-        UserController().invite_user(user_id, friend['email'], friend['firstname'], friend['lastname'])
 
 def get_user_infor(user_id):
     data = User.objects.get_user_by_id(user_id)

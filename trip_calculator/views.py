@@ -76,7 +76,7 @@ def edit_cost_endpoint(request):
 
 @login_required()
 def edit_account_endpoint(request):
-    helper.manage_account_action(request.GET, request.user.user_id, action='update')
+    helper.manage_account_action(request.POST, request.user.user_id, action='update')
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'account', max_age=20)
     return response

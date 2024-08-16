@@ -1,6 +1,6 @@
 from trip_calculator.imp.trip_controller import get_user_CostController, get_user_TripController
 from trip_calculator.imp.registration_controller import get_UserController
-import ast
+import ast, json
 
 def add_trip(user_id, data):
     squad = ast.literal_eval(data['squad'])
@@ -46,7 +46,6 @@ def manage_cost_action(user_id, data):
     action_map[action]()
 
 
-#  do poprawy
 def manage_account_action(data,*args, **kwargs):
     action = kwargs.get('action')
     instance = get_UserController()
@@ -54,9 +53,15 @@ def manage_account_action(data,*args, **kwargs):
     action_map = {
         'register': lambda: instance.register_user(data['email'], data['firstname'], data['lastname']),
         'recovery': lambda: instance.recovery(data['email']),
-        'update': lambda: instance.update_account(args[0], data),
-        'invite': lambda: instance.invite_user(args[0], data)
+        'update': lambda: instance.update_user(args[0], **{key: value for key, value in data.items() if value and key != 'csrfmiddlewaretoken'}),
+        'invite': lambda: invite_friend_helper_function(args[0], data)
     }
+
+    def invite_friend_helper_function(user_id, new_friend):
+        new_friend_data = json.loads(new_friend['friend'])
+        for friend in new_friend_data:
+            instance.invite_user(user_id, friend['email'], friend['firstname'], friend['lastname'])
+
     return action_map[action]()
 
 
