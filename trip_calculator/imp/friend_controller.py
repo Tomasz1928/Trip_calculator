@@ -40,6 +40,11 @@ class FriendController:
             self.refresh_friend_object()
 
     def get_friend_list(self):
+        friends = Friend.objects.filter(user=self.user_id).select_related('friend')
+        return [{'user_id': friend.friend.user_id, 'name': friend.friend.firstname, 'lastname': friend.friend.lastname}
+                for friend in friends]
+
+    def get_friend_list_for_trip(self):
         friends = Friend.objects.filter(user_id=self.user_id).select_related('friend').prefetch_related(
             Prefetch('friend__usertrip_set', queryset=UserTrip.objects.filter(
                 trip_id__in=UserTrip.objects.filter(user_id=self.user_id).values_list('trip_id', flat=True)

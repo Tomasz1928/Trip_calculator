@@ -29,7 +29,8 @@ def manage_trip_action(user_id, data):
         'delete': lambda: instance.update_trip_details(data['trip_id'], delete=True),
         'description': lambda: instance.update_trip_details(data['trip_id'], description=data['description']),
         'title': lambda: instance.update_trip_details(data['trip_id'], name=data['name']),
-        'details':lambda :instance.get_info()
+        'details':lambda :instance.get_info(),
+        'trip_squad':lambda :instance.get_trip_squad(data['trip_id'])
     }
     return action_map[action]()
 
@@ -68,6 +69,7 @@ def manage_friend_action(*args, **kwargs):
     instance_user_controller = get_UserController()
 
     action_map = {
+        'friend_for_trip': lambda: instance.get_friend_list_for_trip(),
         'friend_list': lambda: instance.get_friend_list(),
         'add': lambda: invite_friend_helper_function(kwargs.get('user_id'), args[0]),
         'delete': lambda: instance.delete_friend(kwargs.get('friend_id'))

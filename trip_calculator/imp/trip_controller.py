@@ -23,7 +23,6 @@ class TripController:
             new_trip.save()
             user_trips = [UserTrip(trip=new_trip, user_id=user_id) for user_id in squad]
             UserTrip.objects.bulk_create(user_trips)
-            self.trip_details_objects = self.get_trip_details_objects()
 
     def get_trip_details_objects(self):
         return Trip.objects.filter(
@@ -55,6 +54,10 @@ class TripController:
                         setattr(trip, field, value)
                         trip.save()
             self.get_info()
+
+    def get_trip_squad(self, trip_id):
+        squad = UserTrip.objects.filter(trip__trip_id=trip_id).values('user__user_id', 'user__firstname')
+        return [{'user_id': user['user__user_id'], 'firstname': user['user__firstname']} for user in squad]
 
     def get_trip_info(self):
         trip_details = []

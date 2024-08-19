@@ -85,6 +85,7 @@ def create_trip_view(request):
     if request.method == 'POST':
         helper.add_trip(request.user.user_id, request.POST)
         return redirect("home_view")
+
     person = helper.manage_friend_action(user_id=request.user.user_id, action='friend_list')
     return render(request, 'trip_calculator/create_trip.html', {'person':person})
 
@@ -111,17 +112,15 @@ def add_cost_view(request, trip_id):
         response.set_cookie('trip_id', f'{trip_id}', max_age=20)
         return response
 
-    tripDetails = helper.manage_trip_action(user_id, {'action':'details'})
-    trip_info = next((trip for trip in tripDetails if trip['trip_id'] == trip_id), None).get('squad')
-    trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_info))
-
+    squad = helper.manage_trip_action(user_id,{'action':'trip_squad','trip_id':trip_id})
+    trip_squad = list(filter(lambda item: item['user_id'] != user_id, squad))
     return render(request, 'trip_calculator/add_cost.html', {'person': trip_squad})
 
 
 @login_required
 def home_view(request):
     tripDetails = helper.manage_trip_action(request.user.user_id, {'action': 'details'})
-    friend = helper.manage_friend_action(user_id=request.user.user_id, action='friend_list')
+    friend = helper.manage_friend_action(user_id=request.user.user_id, action='friend_for_trip')
     user = helper.manage_account_action('',request.user.user_id, action='info')
     return render(request, 'trip_calculator/home_view.html',
                   {'user': user, 'friends_list': friend, 'allTripData':tripDetails})
