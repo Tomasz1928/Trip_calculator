@@ -15,7 +15,6 @@ class TripController:
     def get_info(self):
         self.trip_details_objects = self.get_trip_details_objects()
         self.trip_info = self.get_trip_info()
-
         return self.trip_info
 
     def new_trip(self, name, start, end, description, squad):

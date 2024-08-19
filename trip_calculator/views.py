@@ -3,9 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import render, redirect
-from trip_calculator.imp import registration_controller, helper
-from trip_calculator.imp.friend_controller import get_user_FriendController
-from trip_calculator.imp.trip_controller import get_user_TripController
+from trip_calculator.imp import helper
 
 
 def login_page_view(request):
@@ -58,7 +56,7 @@ def edit_trip_endpoint(request):
 
 @login_required()
 def edit_friend_endpoint(request):
-    get_user_FriendController(request.user.user_id).delete_friend(request.GET['friend_id'])
+    helper.manage_friend_action(user_id=request.user.user_id, friend_id= request.GET['friend_id'], action='delete')
     response = HttpResponseRedirect(reverse("home_view"))
     response.set_cookie('home_page', 'friend', max_age=20)
     return response
@@ -87,14 +85,14 @@ def create_trip_view(request):
     if request.method == 'POST':
         helper.add_trip(request.user.user_id, request.POST)
         return redirect("home_view")
-    person = get_user_FriendController(request.user.user_id).get_friend_list()
+    person = helper.manage_friend_action(user_id=request.user.user_id, action='friend_list')
     return render(request, 'trip_calculator/create_trip.html', {'person':person})
 
 
 @login_required
 def invite_friend_view(request):
     if request.method == 'POST':
-        helper.manage_account_action(request.POST,request.user.user_id, action='invite')
+        helper.manage_friend_action(request.POST, user_id=request.user.user_id, action='add')
         response = HttpResponseRedirect(reverse("home_view"))
         response.set_cookie('home_page', 'friend', max_age=20)
         return response
@@ -113,7 +111,7 @@ def add_cost_view(request, trip_id):
         response.set_cookie('trip_id', f'{trip_id}', max_age=20)
         return response
 
-    tripDetails = get_user_TripController(user_id).get_info()
+    tripDetails = helper.manage_trip_action(user_id, {'action':'details'})
     trip_info = next((trip for trip in tripDetails if trip['trip_id'] == trip_id), None).get('squad')
     trip_squad = list(filter(lambda item: item['user_id'] != user_id, trip_info))
 
@@ -122,8 +120,8 @@ def add_cost_view(request, trip_id):
 
 @login_required
 def home_view(request):
-    tripDetails = get_user_TripController(request.user.user_id).get_info()
-    friend = get_user_FriendController(request.user.user_id).get_friend_list()
-    user = registration_controller.get_user_infor(request.user.user_id)
+    tripDetails = helper.manage_trip_action(request.user.user_id, {'action': 'details'})
+    friend = helper.manage_friend_action(user_id=request.user.user_id, action='friend_list')
+    user = helper.manage_account_action('',request.user.user_id, action='info')
     return render(request, 'trip_calculator/home_view.html',
                   {'user': user, 'friends_list': friend, 'allTripData':tripDetails})
