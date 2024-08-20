@@ -76,12 +76,14 @@ class TripController:
                 splited_list = list(cost.splited_set.all())
                 payed_was_you = cost.payer.user_id == self.user_id
                 user_in_splited = any(splited.user.user_id == self.user_id for splited in splited_list)
+                user_payed = any(splited.user.user_id == self.user_id and splited.payment == True and splited.cost.cost_id == cost.cost_id
+                                 for splited in splited_list)
                 if user_in_splited or payed_was_you:
                     number_of_splited = len(splited_list)
                     unit_cost = float(round(cost.value / number_of_splited if number_of_splited > 0 else 0, 2))
                     unpaid_users = [splited.user for splited in splited_list if not splited.payment]
                     trip_info['costs']['own_cost'] += unit_cost if user_in_splited else 0
-                    to_return = unit_cost * len(unpaid_users) if payed_was_you else unit_cost
+                    to_return = unit_cost * len(unpaid_users) if payed_was_you else unit_cost if not user_payed else 0
 
                     cost_info = {
                         'cost_id': cost.cost_id, 'cost_name': cost.cost_name, 'value': float(cost.value),
