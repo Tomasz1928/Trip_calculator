@@ -157,8 +157,8 @@
 
                     <tr>
                         <th scope="col">Name</th>
-
                         <th scope="col">Balance</th>
+                        <th scope="col">Return All</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -173,6 +173,24 @@
                             {% with value=related.unit_cost %}
                             {{ value|floatformat:2 }}
                             {% endwith %}
+                        </td>
+
+                        <td scope="col">
+                            <a href="#"
+                               class="d-flex" data-bs-toggle="modal"
+                               id="edit-cost-return-all-{{ related.related_user_return }}-{{ trip.trip_id }}"
+                               data-bs-target="#cost-return-all-modal"
+                               data-value-friend-id="{{ related.related_id }}" data-value-trip-id="{{ trip.trip_id }}"
+                               data-value-friend-name="{{ related.related_firstname }}"
+                               data-value-friend-lastname="{{ related.related_lastname }}"
+                               data-value-friend-return="{{ related.related_user_return }}"
+                               {% with value=related.unit_cost %}
+                               data-value-cost-value="{{ value|floatformat:2 }}"
+                               {% endwith %}
+                            >
+                                <i class="bi-cash-coin ms-1"
+                                   style="color:{% if related.related_user_return %}green {% else %}red {% endif %}"></i>
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}

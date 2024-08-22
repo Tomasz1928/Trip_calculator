@@ -43,7 +43,8 @@ def manage_cost_action(user_id, data):
         'delete': lambda: instance.update_cost_details(data['cost_id'], delete=True),
         'update': lambda: instance.update_cost_details(data['cost_id'], value=data['value']),
         'status': lambda: instance.update_cost_details(data['cost_id'], payment=data['payment'], split_user_id=data['user_id']),
-        'title': lambda: instance.update_cost_details(data['cost_id'], cost_name=data['name'])
+        'title': lambda: instance.update_cost_details(data['cost_id'], cost_name=data['name']),
+        'return-all': lambda: instance.return_all(int(data['trip_id']), int(data['friend_id']))
     }
 
     return action_map[action]()

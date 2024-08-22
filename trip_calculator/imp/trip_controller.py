@@ -1,5 +1,5 @@
 from trip_calculator.models import Trip, UserTrip, Cost, Splited
-from django.db.models import Q
+from django.db.models import Q, Subquery
 from django.db import transaction
 from itertools import groupby
 from operator import itemgetter
@@ -37,7 +37,7 @@ class TripController:
         return None
 
     def update_trip_details(self, trip_id, **kwargs):
-        trip = Trip.objects.get(pk= trip_id)
+        trip = Trip.objects.get(pk=trip_id)
 
         if trip and trip.trip_owner_id == self.user_id:
             fields_to_update = {
@@ -76,8 +76,9 @@ class TripController:
                 splited_list = list(cost.splited_set.all())
                 payed_was_you = cost.payer.user_id == self.user_id
                 user_in_splited = any(splited.user.user_id == self.user_id for splited in splited_list)
-                user_payed = any(splited.user.user_id == self.user_id and splited.payment == True and splited.cost.cost_id == cost.cost_id
-                                 for splited in splited_list)
+                user_payed = any(
+                    splited.user.user_id == self.user_id and splited.payment == True and splited.cost.cost_id == cost.cost_id
+                    for splited in splited_list)
                 if user_in_splited or payed_was_you:
                     number_of_splited = len(splited_list)
                     unit_cost = float(round(cost.value / number_of_splited if number_of_splited > 0 else 0, 2))
@@ -90,12 +91,12 @@ class TripController:
                         'unit_cost': unit_cost,
                         'payer': {'user_id': cost.payer.user_id, 'firstname': cost.payer.firstname,
                                   'lastname': cost.payer.lastname,
-                                  'was_you':payed_was_you },
+                                  'was_you': payed_was_you},
                         'splited': [{'user_id': splited.user.user_id, 'payment': splited.payment,
                                      'firstname': splited.user.firstname, 'lastname': splited.user.lastname}
                                     for splited in splited_list],
 
-                        'to_return':round(float(to_return),2)
+                        'to_return': round(float(to_return), 2)
                     }
 
                     unpaid = [{'user_id': user.user_id, 'related_id': cost.payer.user_id,
@@ -125,7 +126,7 @@ class TripController:
             only_for_user.sort(key=itemgetter('user_id', 'related_id'))
 
             reduce_only_for_user = [
-                {'user_id': key[0],'related_id': key[1],
+                {'user_id': key[0], 'related_id': key[1],
                  'unit_cost': round(sum(item['unit_cost'] for item in group), 2)}
                 for key, group in groupby(only_for_user, key=lambda x: (x['user_id'], x['related_id']))
             ]
@@ -173,7 +174,7 @@ class CostController(TripController):
         cost = Cost.objects.get(cost_id=cost_id)
         splited = Splited.objects.filter(cost_id=cost_id)
 
-        if (cost or splited)and cost.payer_id == self.user_id:
+        if (cost or splited) and cost.payer_id == self.user_id:
             cost_to_update = {
                 'cost_name': kwargs.get('cost_name'),
                 'value': kwargs.get('value'),
@@ -195,6 +196,17 @@ class CostController(TripController):
                         setattr(cost, field, value)
                         cost.save()
             self.get_info()
+
+    def return_all(self, trip_id, friend_id):
+        with ((transaction.atomic())):
+            cost_ids = Cost.objects.filter(
+                trip_id=trip_id, payer_id__in=[self.user_id, friend_id]).values('cost_id')
+
+            Splited.objects.filter(
+                cost_id__in=Subquery(cost_ids), user_id=friend_id, cost__payer_id=self.user_id).update(payment=True)
+
+            Splited.objects.filter(
+                cost_id__in=Subquery(cost_ids), user_id=self.user_id, cost__payer_id=friend_id).update(payment=True)
 
 
 def get_user_TripController(user_id):
