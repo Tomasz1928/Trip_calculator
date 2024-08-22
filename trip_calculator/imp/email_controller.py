@@ -30,8 +30,8 @@ class EmailSender:
         self.subject = 'No Reply. Invitation to Trip Calculator System'
         self.message = (
             f'You have been invited to the Trip Calculator system by Your friend.\n\n'
-            f'Here is Your login: {kwargs['email']}\n'
-            f'Here is Your password: {kwargs['password']}\n'
+            f'Here is Your login: {kwargs.get("email")}\n'
+            f'Here is Your password: {kwargs.get("password")}\n'
             f'Please use this credential to log in here: {full_login_url}\n\n'
             f'After Login please update Your First name and Last name.\n\n'
             f'Best regards,\n'
@@ -43,8 +43,8 @@ class EmailSender:
         self.message = (
             f'Thank You very much for registering in our system.\n\n'
             f'Below You will find Your login details.\n'
-            f'Here is Your login: {kwargs['email']}\n'
-            f'Here is Your password: {kwargs['password']}\n'
+            f'Here is Your login: {kwargs.get("email")}\n'
+            f'Here is Your password: {kwargs.get("password")}\n'
             f'Please use this credential to log in here: {full_login_url}\n\n'
             f'Best regards,\n'
             f'Team Trip Cost Calculator'
@@ -54,7 +54,7 @@ class EmailSender:
         self.subject = 'No Reply. Your new password for Trip Calculator System'
         self.message = (
             f'Recovery process finished successfully, below You will find a new generated password.\n\n'
-            f'Here is Your password: {kwargs['password']}\n'
+            f'Here is Your password: {kwargs.get("password")}\n'
             f'Best regards,\n'
             f'Team Trip Cost Calculator'
         )
@@ -63,7 +63,7 @@ class EmailSender:
         self.subject = 'No Reply. Your new password for Trip Calculator System'
         self.message = (
             f'Update password process finished successfully, below You will find Your new password.\n\n'
-            f'Here is Your password: {kwargs['password']}\n'
+            f'Here is Your password: {kwargs.get("password")}\n'
             f'Best regards,\n'
             f'Team Trip Cost Calculator'
         )
