@@ -236,5 +236,29 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
 
+        document.querySelectorAll("[id^='edit-cost-return-all-']").forEach(button => {
+        button.addEventListener('click', (event) => {
+            const inputFriendId = document.getElementById('cost-return-all-modal-input-friend-id');
+            const inputTripId = document.getElementById('cost-return-all-modal-input-trip-id');
+            const textArea = document.getElementById('cost-return-all-modal-text');
+
+            const friendId = event.currentTarget.getAttribute('data-value-friend-id');
+            const friendName = event.currentTarget.getAttribute('data-value-friend-name');
+            const friendLastname = event.currentTarget.getAttribute('data-value-friend-lastname');
+            const tripId = event.currentTarget.getAttribute('data-value-trip-id');
+            const friendReturn = event.currentTarget.getAttribute('data-value-friend-return');
+
+            const value = event.currentTarget.getAttribute('data-value-cost-value');
+
+            const text1 = `Are You confirm You return ${friendName} ${friendLastname}all money? ${value}`
+            const text2 = `Are You confirm ${friendName} ${friendLastname} return You all money? ${value}`
+
+            textArea.textContent = friendReturn ==='False'? text1 : text2
+            inputFriendId.setAttribute('value', friendId)
+            inputTripId.setAttribute('value', tripId)
+        });
+    })
+
+
     openUpdatedTab()
 });
